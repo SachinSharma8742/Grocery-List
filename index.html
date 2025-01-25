@@ -3,510 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-body{
-    background-color: #2c2c2c;
-}
-.games {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
-  grid-gap: 50px;
-  padding: 0 20% 0 20% ;
-   
-}
-
-
-.btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 13rem;
-  overflow: hidden;
-  height: 3rem;
-  background-size: 300% 300%;
-  backdrop-filter: blur(1rem);
-  border-radius: 5rem;
-  transition: 0.5s;
-  animation: gradient_301 5s ease infinite;
-  border: double 4px transparent;
-  background-image: linear-gradient(#212121, #212121),  linear-gradient(137.48deg, #ffdb3b 10%,#FE53BB 45%, #8F51EA 67%, #0044ff 87%);
-  background-origin: border-box;
-  background-clip: content-box, border-box;
-}
-
-#container-stars {
-  position: absolute;
-  z-index: -1;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  transition: 0.5s;
-  backdrop-filter: blur(1rem);
-  border-radius: 5rem;
-}
-
-strong {
-  z-index: 2;
-  font-family: 'Avalors Personal Use';
-  font-size: 12px;
-  letter-spacing: 5px;
-  color: #FFFFFF;
-  text-shadow: 0 0 4px white;
-}
-
-#glow {
-  position: absolute;
-  display: flex;
-  width: 12rem;
-}
-
-.circle {
-  width: 100%;
-  height: 30px;
-  filter: blur(2rem);
-  animation: pulse_3011 4s infinite;
-  z-index: -1;
-}
-
-.circle:nth-of-type(1) {
-  background: rgba(254, 83, 186, 0.636);
-}
-
-.circle:nth-of-type(2) {
-  background: rgba(142, 81, 234, 0.704);
-}
-
-.btn:hover #container-stars {
-  z-index: 1;
-  background-color: #212121;
-}
-
-.btn:hover {
-  transform: scale(1.1)
-}
-
-.btn:active {
-  border: double 4px #FE53BB;
-  background-origin: border-box;
-  background-clip: content-box, border-box;
-  animation: none;
-}
-
-.btn:active .circle {
-  background: #FE53BB;
-}
-
-#stars {
-  position: relative;
-  background: transparent;
-  width: 200rem;
-  height: 200rem;
-}
-
-#stars::after {
-  content: "";
-  position: absolute;
-  top: -10rem;
-  left: -100rem;
-  width: 100%;
-  height: 100%;
-  animation: animStarRotate 90s linear infinite;
-}
-
-#stars::after {
-  background-image: radial-gradient(#ffffff 1px, transparent 1%);
-  background-size: 50px 50px;
-}
-
-#stars::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -50%;
-  width: 170%;
-  height: 500%;
-  animation: animStar 60s linear infinite;
-}
-
-#stars::before {
-  background-image: radial-gradient(#ffffff 1px, transparent 1%);
-  background-size: 50px 50px;
-  opacity: 0.5;
-}
-
-@keyframes animStar {
-  from {
-    transform: translateY(0);
-  }
-
-  to {
-    transform: translateY(-135rem);
-  }
-}
-
-@keyframes animStarRotate {
-  from {
-    transform: rotate(360deg);
-  }
-
-  to {
-    transform: rotate(0);
-  }
-}
-
-@keyframes gradient_301 {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-@keyframes pulse_3011 {
-  0% {
-    transform: scale(0.75);
-    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
-  }
-
-  70% {
-    transform: scale(1);
-    box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
-  }
-
-  100% {
-    transform: scale(0.75);
-    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
-  }
-}
-    
-    
-@import url('https://fonts.googleapis.com/css2?family=Birthstone+Bounce:wght@400;500&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
-
-.birthstone-bounce-regular {
-    font-family: "Birthstone Bounce", cursive;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 2rem;
-}
-
-.card {
-    position: relative;
-    margin-top: 50vh;
-    margin-left: 50vw;
-    transform: translate(-50%,-50%);
-    max-width: 300px;
-    width: 90%;
-    height: 400px;
-    perspective: 1000px;
-    background-color: rgba(149, 148, 148, 0.688);
-    border-radius: 10px;
-
-}
-
-.card-inner {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.6s;
-    transform-style: preserve-3d;
-}
-
-
-
-.showCard{
-    transform: rotateY(180deg);
-    border-radius: 10px;
-    
-}
-
-
-
-.openCardBtn{
-  display: none;
-    background-color: rgba(255, 255, 255, 0);
-    padding: 0.3rem 1rem;
-    border-radius: 0.3rem;
-    border: 1px solid rgba(128, 128, 128, 0.66);
-    font-size: 1.3rem;
-    color: rgb(60, 60, 60);
-}
-
-.messageText{
-    color: rgb(153, 153, 153);
-}
-
-.openCardBtn:hover{
-    cursor: pointer;
-    background-color: white;
-}
-
-
-.card-front, .card-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.card-front {
-    background-image: url('https://img.freepik.com/free-photo/white-paper-texture_1194-5998.jpg?t=st=1720628780~exp=1720632380~hmac=0fc27b1c32b60af81300c0ef4889c61b128f2873d845bbac99fe8af137367704&w=1380');
-    background-size: cover;
-    background-position: center;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-
-.card-front p{
-    opacity: 60%;
-
-    font-size: 1.4rem;
-}
-
-.card-back {
-    background-color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    text-align: center;
-    transform: rotateY(-180deg) ;
-}
-
-.message {
-    font-size: 20px;
-    color: #ff69b4;
-}
-
-.message p {
-    margin: 10px 0;
-}
-
-.emoji {
-    font-size: 50px;
-}
-
-.muteBtn{
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    z-index: 12;
-    margin: 4rem;
-    cursor: pointer;
-}    
-    
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
-
-*{
-  font-family: "Orbitron", sans-serif;
-  font-optical-sizing: auto;
-  font-style: normal;
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-.main{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 10vh;
-}
-
-h1, .clock h1{
-    font-size: 4rem;
-}
-
-
-
-.night{
-    background-color: black;
-    color: white;
-}
-.clock span{
-  background-color: rgb(0, 0, 0);
-  color: white;
-  padding: 5px;
-  border-radius: 5px;
-
-}
-.clock{
-  font-size:xx-large;
-}
-
-    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-storage.js"></script> 
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./test.css">
+    <title>Smart Grocery List</title>
 </head>
 <body>
-    <section style="height: 100vh; width: 100vw; overflow: hidden;">
-      <div class="card">
-        <div class="card-inner">
-            <div class="card-front">
-                <h2 id="kuch" c>To see surprise</h2>
-                <section class="main">
-                  <div class="clock">
-                   <span id="days">0</span> :
-                   <span id="hours">0</span> :
-                   <span id="minutes">0</span> :
-                   <span id="seconds">0</span>
-                  </div>
-                 </section>
-                <button onclick="playsong()" class="openCardBtn">Click Here</button>
-            </div>
-            <div class="card-back">
-                <div class="message">
-                    <p class="emoji">🎉🎂🎈</p>
-                    <p class="birthstone-bounce-regular">Happy Birthday!</p>
-                    <span class="userName birthstone-bounce-regular"></span>
-                    <p class="messageText">Wishing you a day filled with love, joy, and happiness. May all your dreams come true!</p>
-                    <p class="emoji">🎁😊💖</p>
-                </div>
-            </div>
+    <div class="main-container">
+        <br>
+        <h1>Smart Grocery List</h1>
+        <!-- Search Section -->
+         <!-- From Uiverse.io by satyamchaudharydev --> 
+<form class="form">
+    <label for="search">
+        <input id="searchBar" required="" autocomplete="off" placeholder="Search items..." type="text">
+        <div class="icon">
+            <svg stroke-width="2" stroke="currentColor" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="swap-on">
+                <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linejoin="round" stroke-linecap="round"></path>
+            </svg>
+            
         </div>
-    </div> 
+    </label>
+</form>
     
-     <div id="container-stars" style="position: absolute; top: 0;">
-              <div id="stars"></div>
-            </div>
-       
-            <button class="muteBtn" onclick="muteAudio()" hidden>Mute</button>
-                  
-              
-
-        </section>
-        
-<script>
-let userName = window.location.href.split('name=')[1]
-let capitalizedName = []
-
-const card = document.querySelector(".card-inner")
-const muteBtn = document.querySelector(".muteBtn")
-const userNameSpan = document.querySelector(".userName")
-
-
-let isMusicPlaying = false
-
-const wishingSound = new Audio('https://cdn.pixabay.com/download/audio/2023/09/13/audio_e265103dcb.mp3?filename=happy-birthday-3-version-166417.mp3')
-
-if(userName.includes("_")){
-    userName = userName.split("_")
-    for(let i=0; i<userName.length; i++){
-        capitalizedName.push(capitalizeFirstLettor(userName[i]))
-    }
-    capitalizedName = capitalizedName.join(' ')
-}
-else capitalizedName = capitalizeFirstLettor(userName)
-
-userNameSpan.innerHTML = capitalizedName
-
-function capitalizeFirstLettor(word){
-    return word[0].toUpperCase() + word.slice(1)
-}
-const button = document.querySelector(".openCardBtn")
-function showCard(){  
-  button.style.display = "block";
-}
-function playsong() {
-    card.classList.add('showCard');
-    muteBtn.removeAttribute('hidden');
-    isMusicPlaying = true;
-    wishingSound.currentTime = 0;
-    wishingSound.play();
-}
-
-
-
-
-function muteAudio(){
-    if(isMusicPlaying){
-        wishingSound.pause()
-        muteBtn.innerHTML = 'unmute'
-        isMusicPlaying = false
-    }  
-    else {
-        wishingSound.play()
-        isMusicPlaying = true
-        muteBtn.innerHTML = 'mute'
-    }
-}
-
-const daysElement = document.getElementById("days");
-const hoursElement = document.getElementById("hours");
-const minutesElement = document.getElementById("minutes");
-const secondsElement = document.getElementById("seconds");
-
-function getBirthdayFromURL() {
-    const params = new URLSearchParams(window.location.search);
-    const dateString = params.get('date');
-    const timeString = params.get('time') || '00:00';
     
-    if (dateString) {
-        const [year, month, day] = dateString.split('-').map(Number);
-        const [hours, minutes] = timeString.split(':').map(Number);
-        return new Date(year, month - 1, day, hours, minutes);
-    }
-    return new Date(new Date().getFullYear(), 0, 1);
-}
+        <!-- Input Section -->
+        <div class="input-section">
+            <input type="text" id="todoText" placeholder="Add a new item...">
+            <input type="number" id="itemQuantity" placeholder="Qty" min="0" class="quantity-input">
+            <input type="number" id="itemPrice" placeholder="Price" min="0" step="0.01" class="price-input">
+            <button onclick="addGroceryItem(event)">Add</button>
+        </div>
+    
+        <!-- Total Section -->
+        <div class="total-section">
+            <p>Items: <span id="totalItems">0</span></p>
+            <p>Price: ₹<span id="totalPrice">0.00</span></p>
+           
+        </div>
+        <select id="categorySelect">
+          <!-- Options will be populated dynamically -->
+      </select>
+        <!-- Grocery Items List -->
+        <div class="todos"></div>
+    </div>
 
-const birthday = getBirthdayFromURL();
-
-function addZero(value) {
-    return value < 10 ? "0" + value : value;
-}
-
-let isBirthdayToday = false;
-
-function generateCountdown() {
-    if (isBirthdayToday) return;
-
-    const now = new Date();
-    let nextBirthday = new Date(birthday);
-  
-
-    const timeLeft = nextBirthday - now;
-    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-
-    daysElement.innerText = addZero(days);
-    hoursElement.innerText = addZero(hours);
-    minutesElement.innerText = addZero(minutes);
-    secondsElement.innerText = addZero(seconds);
-
-
+    <div class="popup" id="popup"></div>
+    
 
   
-    const k = document.getElementById('kuch');
-    if (timeLeft <= 0) {
-       isBirthdayToday = true;
-       daysElement.innerText = '00';
-       hoursElement.innerText = '00';
-       minutesElement.innerText = '00';
-       secondsElement.innerText = '00';
-       showCard();
-    }
-    
-}
-
-function celebrateBirthday() {
-    
-}
-
-generateCountdown();
-setInterval(generateCountdown, 1000);
-</script>     
+    <div style="display: none;">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAApgAAAKYB3X3/OAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANCSURBVEiJtZZPbBtFFMZ/M7ubXdtdb1xSFyeilBapySVU8h8OoFaooFSqiihIVIpQBKci6KEg9Q6H9kovIHoCIVQJJCKE1ENFjnAgcaSGC6rEnxBwA04Tx43t2FnvDAfjkNibxgHxnWb2e/u992bee7tCa00YFsffekFY+nUzFtjW0LrvjRXrCDIAaPLlW0nHL0SsZtVoaF98mLrx3pdhOqLtYPHChahZcYYO7KvPFxvRl5XPp1sN3adWiD1ZAqD6XYK1b/dvE5IWryTt2udLFedwc1+9kLp+vbbpoDh+6TklxBeAi9TL0taeWpdmZzQDry0AcO+jQ12RyohqqoYoo8RDwJrU+qXkjWtfi8Xxt58BdQuwQs9qC/afLwCw8tnQbqYAPsgxE1S6F3EAIXux2oQFKm0ihMsOF71dHYx+f3NND68ghCu1YIoePPQN1pGRABkJ6Bus96CutRZMydTl+TvuiRW1m3n0eDl0vRPcEysqdXn+jsQPsrHMquGeXEaY4Yk4wxWcY5V/9scqOMOVUFthatyTy8QyqwZ+kDURKoMWxNKr2EeqVKcTNOajqKoBgOE28U4tdQl5p5bwCw7BWquaZSzAPlwjlithJtp3pTImSqQRrb2Z8PHGigD4RZuNX6JYj6wj7O4TFLbCO/Mn/m8R+h6rYSUb3ekokRY6f/YukArN979jcW+V/S8g0eT/N3VN3kTqWbQ428m9/8k0P/1aIhF36PccEl6EhOcAUCrXKZXXWS3XKd2vc/TRBG9O5ELC17MmWubD2nKhUKZa26Ba2+D3P+4/MNCFwg59oWVeYhkzgN/JDR8deKBoD7Y+ljEjGZ0sosXVTvbc6RHirr2reNy1OXd6pJsQ+gqjk8VWFYmHrwBzW/n+uMPFiRwHB2I7ih8ciHFxIkd/3Omk5tCDV1t+2nNu5sxxpDFNx+huNhVT3/zMDz8usXC3ddaHBj1GHj/As08fwTS7Kt1HBTmyN29vdwAw+/wbwLVOJ3uAD1wi/dUH7Qei66PfyuRj4Ik9is+hglfbkbfR3cnZm7chlUWLdwmprtCohX4HUtlOcQjLYCu+fzGJH2QRKvP3UNz8bWk1qMxjGTOMThZ3kvgLI5AzFfo379UAAAAASUVORK5CYII=" id="editIcon" style="display: none;">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAsQAAALEBxi1JjQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAKESURBVEiJrdVNiE5RGMDx/5mXz5FkFEKyUCgWs1BWFhILJR8bJQtlIR8L5WNBWSiUlIUVZSMLG0JZTJSFhUgWiCgfKQsLES/jY2Ysmrmux8Y7vTPjvTP3ree/Ofd/7nPOc55zb6aqVBVExFxgF7AWeB+biFgEXAE2Av2x+QjYXFUvI2JNRHQD54HjwFVgV0QsiYiNwG1gJvAC6AfeAYsi4hrQA9yLiO0R0Z3n3AEctxroAe4CXyNif2zTqjo/mF4DZOAo0FWJ/wDOAFP+5RtQB/YBG4D3wFAwGREbgOVFlXdATwQdwBbgRA7dl3MwHZgLXASml+5qfJ4DbAM+5/O2uf8VsCwitgFf8qPuqhZLhP05wQ85uAc8ApYCO3MHu9n6R2ZnrkRVvRgeAcuBOcB9/34ZR3MCncA6YDUwKXmm5ITadW4GpgI3gU/Juwr0AQ+Alaq6E7CxuTjJswc4C+wFrgAjI+I48BB4DMwD9kfEGuAoMAhMBo5GxHbgGlCPiJXAYGw9AaxsDmwEzgEzquoCMD8i5uXfRcBD4CqwpNSB0PB1LgS2AveBh025LhB0llKZWDkfXpKsDpyOiNuq+jwiRkXEjvx+TsVmckQcUtULEbELOEj6H94CbQNExIyIOFyCXa6q19uBioiTwCzgJHBaVd+262s1J26FquqjwvtAXVVrkfN7AHypqj/+B1RKYBrwOiKmAluAtyWbcRGxOiJqqvogIoYXrKcBW1X1c0RcBiZFxJgmw9HAD+AZ8CYiFrfqoC3AKGAEUAOeluyfAD3AE+ATcAi4BnwDHgFPgJeq+nsgQJ5YY4EpqvqqYKsBY1S1HhE1YLSq1iNiGDBCVesR0QGMVtV6qYNRwM+B+v4Cz0b3E2WiEXQAAAAASUVORK5CYII=" id="closeIcon" style="display: none;">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAApgAAAKYB3X3/OAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAHoSURBVEiJvdY7aFRBFMbx/927EoyKIPgojEJ8xEfEQlTUQgQrQUFiYyOiYKk2VhYWPoJYiYUoChYWgp2VhYidhUXwgaKICoqPRBN87Pr7LHIXdrN7dzfZxA+mOGfO+c+ZM3NmSlWVJSEi1gJHgK3Am4i4r6pPl4RYzsCIGAEuAeeBL8DG3HUX2FFV35YEqKppjYhR4DGwrqr2VtXeqloP3AcGgScRsX5JCGAAeA1MVdWThQpV9Qw4CXQDT5YEqKrPwMn8+SgitkfEYEQsz7YhYAOwG/heVR+XhMiQSeAgsD2D9gGngR3A06p6tyQEQET0ALuAAWAD8Ap4XlWTEdEHXAYuVtXlZQNyJXuAUWATMJWbjgGvqupdRGwGbgHHq+p2x4CIGAW2AN+Bz/nvG6vqdUT0AWeB3qq6ERHrgavA6aq62xEgImrAc+ApsLeqxiNiANiVIfuBh8CWDLsFnKqq8Y4AuZLbGXIU6AduAhP5t3eBvoh4kO9eAIMR8TwiRtoCRMRARNwFzgGTwK6qGquqL1X1GNgOvAVeApPACDAWEdvawrTY27v5vg08A4ar6n2lbyQDNwLdwHhVfWgGtNzBiOgHzgArgO/AhVZfVlX9yH5RVX/bBmTIMuBQvt6rqp8d/aZ2Wv8A/K7H9BSZQYIAAAAASUVORK5CYII=" id="saveIcon" style="display: none;">
+    </div>
+    <script src="./assets/js/config.js"></script>
+    <script src="./assets/js/list.js"></script>
+    <script src="./assets/js/app.js"></script>
 </body>
 </html>
