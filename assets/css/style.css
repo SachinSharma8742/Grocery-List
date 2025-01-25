@@ -1,0 +1,644 @@
+:root {
+    --primary-color: #ffffff;
+    --secondary-color: #E5C7C5;
+    --background-color: #F4E2DE;
+    --backgroun-main-color :white;
+    --white: #FFFFFF;
+    --black: #000000;
+    --gray-light: #F5F5F5;
+    --gray-border: #B2BEC3;
+    --text-dark: #2D3436;
+    --text-light: #FFFFFF;
+    --background-dark: hsl(0, 0%, 22%);
+    --background-light: #F4E2DE;
+    --primary-dark: #5b42f3;
+    --primary-light: #00ddeb;
+    --secondary-dark: #B2BEC3;
+    --secondary-light: #E5C7C5;
+    --text-dark-mode: #F5F5F5;
+    --popup-background: #00ddeb;
+    --popup-text-color: #FFFFFF;
+    --delete-cancel: rgb(255, 0, 0);
+    --complete: rgb(0, 255, 0);
+    --edit: rgb(37, 127, 218);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary-color: var(--primary-dark);
+        --secondary-color: var(--secondary-dark);
+        --background-color: var(--background-dark);
+        --backgroun-main-color : black;
+        --text-dark: var(--text-dark-mode);
+        --text-light: black;
+        --popup-background: #5b42f3;
+        --popup-text-color: #F5F5F5;
+    }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-color: var(--backgroun-main-color);
+    color: var(--text-dark);
+    padding: 20px;
+}
+
+.main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: var(--background-color);
+    border-radius: 40px 40px 10px 10px;
+    padding: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+   
+
+h1 {
+    text-align: center;
+    color: var(--text-dark);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--secondary-color);
+}
+
+
+.popup {
+    position: fixed;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--popup-background);
+    color: var(--popup-text-color);
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: top 0.5s ease-in-out;
+    z-index: 1000;
+}
+
+.popup.show {
+    top: 20px;
+}
+
+.input-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.input-section input,
+.input-section button {
+    flex: 1 1 100%;
+    padding: 10px;
+    margin: 5px 0;
+    background-color: var(--background-color);
+    color: var(--text-dark);
+}
+
+@media (min-width: 600px) {
+    .input-section input,
+    .input-section button {
+        flex: 1;
+        margin: 0;
+    }
+
+    .input-section input[type="text"] {
+        flex: 3;
+    }
+
+    .input-section input[type="number"] {
+        flex: 1;
+    }
+}
+
+
+
+@media (min-width: 1024px) {
+    .input-section {
+        flex-wrap: nowrap;
+    }
+
+    .input-section input,
+    .input-section button {
+        flex: none;
+        margin: 0;
+    }
+
+    .input-section input[type="text"] {
+        flex: 3;
+    }
+
+    .input-section input[type="number"] {
+        flex: 1;
+    }
+
+    .input-section button {
+        flex: 1;
+    }
+}
+#todoText {
+    flex: 1;
+    padding: 20px;
+    border: 1px solid var(--secondary-color);
+    background-color: var(--background-color);
+    border-radius: 5px;
+    font-size: 16px;
+    width: 100%; /* Expand to full container width */
+    color: var(--text-dark);
+}
+
+button {
+    padding: 12px 24px;
+    background-color: var(--primary-color);
+    color: white;
+    border: 2px solid var(--secondary-color);
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: var(--primary-dark);
+}
+
+
+.todos {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.todo {
+    padding:5px 15px ;
+    border-radius: 8px;
+    transition: transform 0.2s;
+    background-color: var(--background-color);
+    color: var(--text-dark);
+    box-shadow:-4px 8px 24px hsla(0, 0%, 0%, 0.25);
+}
+
+.todo:hover {
+    transform: translateY(-5px);
+   
+}
+
+.category-header {
+    margin: 20px 0 10px 0;
+    border-bottom: 2px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.category-header h2 {
+    color: var(--text-dark);
+    font-size: 1.2em;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.category-total {
+    font-size: 0.9em;
+    margin-left: 10px;
+    color: var(--text-dark);
+}
+
+.editForm {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.leftEditForm {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 5px;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* Prevent flex items from overflowing */
+}
+
+.emoji {
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 100%;
+}
+
+.editInput {
+    flex: 1;
+    padding: 5px;
+    border: 1px solid var(--secondary-color);
+    border-radius: 5px;
+    background-color: var( --secondary-color);
+    font-size: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--text-dark);
+}
+
+.editInput:disabled {
+    color: var(--text-light);
+}
+
+.editFormButtons {
+    display: flex;
+    gap: 5px;
+}
+
+.editButton {
+    padding: 5px;
+}
+
+.editButton img {
+    width: 20px;
+    height: 20px;
+    opacity: 0.6;
+    transition: opacity 0.3s;
+    filter: invert(1);
+}
+
+.delete-cancel{
+    background: var(--delete-cancel) ;
+}
+.complete{
+    background: var(--complete);
+}
+.edit{
+    background: var(--edit);
+}
+
+.editButton:hover img {
+    opacity: 1;
+    
+}
+
+
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+
+
+.suggestions-container {
+position: relative;
+}
+
+.suggestions-list {
+position: absolute;
+top: 100%;
+left: 0;
+right: 0;
+background: var(--background-color);
+border: 1px solid #ddd;
+border-top: none;
+max-height: 200px;
+overflow-y: auto;
+z-index: 1000;
+list-style: none;
+padding: 0;
+margin: 0;
+box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+display: none;
+color: var(--text-dark);
+}
+
+
+
+
+
+.suggestion-item {
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.suggestion-item span.emoji {
+font-size: 1.2em;
+}
+
+
+.quantity-input, .price-input {
+width: 100px;
+padding: 5px;
+border: 1px solid var(--secondary-color);
+background-color: var(--background-color);
+border-radius: 5px;
+font-size: 16px;
+}
+.input-section .quantity-input,.input-section .price-input{
+width: 100px;
+padding: 12px;
+border: 1px solid var(--secondary-color);
+background-color: var(--background-color);
+border-radius: 5px;
+font-size: 16px;
+}
+.total-section {
+display: flex;
+justify-content: space-between;
+margin: 20px 0;
+padding: 10px;
+background: var(--primary-color);
+border: 1px solid #ECC2C0;
+border-radius: 5px;
+}
+
+.item-details {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-left: 34px; 
+}
+
+
+@media screen and (max-width: 768px) {
+    .leftEditForm {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 60%;
+    }
+
+    .input-container {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .item-details {
+        width: 100%;
+        padding-left: 34px; /* This aligns with the input, accounting for emoji width */
+        margin-top: 5px;
+        justify-content: flex-start;
+    }
+
+    .quantity-display, .price-display {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 4px 12px;
+        border-radius: 4px;
+        font-size: 0.9em;
+        color: #333;
+    }
+
+    .editFormButtons {
+        display: flex;
+    gap: 5px;
+    }
+}
+
+.quantity-display, .price-display {
+color: #666;
+font-size: 0.9em;
+background: rgba(255, 255, 255, 0.2);
+padding: 4px 12px;
+border-radius: 4px;
+}
+
+.suggestions-container {
+position: relative;
+width: 100%;
+}
+
+.suggestions-list {
+position: absolute;
+top: 100%;
+left: 0;
+right: 0;
+background: var(--background-color);
+border: 1px solid #ddd;
+border-top: none;
+border-radius: 0 0 4px 4px;
+max-height: 200px;
+overflow-y: auto;
+z-index: 1000;
+display: none;
+box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+color: var(--text-dark);
+}
+
+.suggestions-list li {
+padding: 8px 12px;
+cursor: pointer;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.suggestions-list li:hover {
+    background-color: var(--gray-border);
+    }
+
+.suggestion-emoji {
+font-size: 1.2em;
+min-width: 24px;
+}
+
+.suggestion-text {
+flex-grow: 1;
+}
+
+.suggestion-category {
+font-size: 0.8em;
+color: #666;
+padding: 2px 6px;
+background: #f0f0f0;
+border-radius: 4px;
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}
+
+input[type="number"] {
+-moz-appearance: textfield; /* Firefox */
+}
+
+
+.form {
+    --input-bg: #FFf;
+   /*  background of input */
+    --padding: 1.5em;
+    --rotate: 80deg;
+   /*  rotation degree of input*/
+    --gap: 2em;
+
+   /*  when rotating changed icon color */
+    --height: 40px;
+   /*  height */
+    width: 100%;
+    padding-inline-end: 1em 0;
+   /*  change this for padding in the end of input */
+    background: var(--input-bg);
+    position: relative;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+  
+  .form label {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: var(--height);
+  }
+  
+  .form input {
+    width: 100%;
+    padding-inline-start: calc(var(--padding) + var(--gap));
+    outline: none;
+    background: none;
+    border: 0;
+    color: var(--text-light);
+  }
+  /* style for both icons -- search,close */
+  .form svg {
+    /* display: block; */
+    color: #111;
+    transition: 0.3s cubic-bezier(.4,0,.2,1);
+    position: absolute;
+    height: 20px;
+  }
+  /* search icon */
+  .icon {
+    position: absolute;
+    left: var(--padding);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+
+
+
+  /* From Uiverse.io by bociKond */ 
+/* Hide the default checkbox */
+.container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+   
+  }
+  
+  .container {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    font-size: 1.5rem;
+    user-select: none;
+  }
+  
+  /* Create a custom checkbox */
+  .checkmark {
+    --clr: #0B6E4F;
+    position: relative;
+    top: 0;
+    left: 0;
+    height: 1em;
+    width: 1em;
+    background-color: #ccc;
+    border-radius: 50%;
+    transition: 300ms;
+    border: 1px solid #000000;
+  }
+  
+  /* When the checkbox is checked, add a blue background */
+  .container input:checked ~ .checkmark {
+    background-color: var(--clr);
+    border-radius: .5rem;
+    animation: pulse 500ms ease-in-out;
+    border:0;
+  }
+  
+  /* Create the checkmark/indicator (hidden when not checked) */
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  
+  /* Show the checkmark when checked */
+  .container input:checked ~ .checkmark:after {
+    display: block;
+  }
+  
+  /* Style the checkmark/indicator */
+  .container .checkmark:after {
+    left: 0.30em;
+    top: 0.15em;
+    width: 0.25em;
+    height: 0.5em;
+    border: solid #E0E0E2;
+    border-width: 0 0.15em 0.15em 0;
+    transform: rotate(45deg);
+  }
+  
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 #0B6E4F90;
+      rotate: 20deg;
+    }
+  
+    50% {
+      rotate: -20deg;
+    }
+  
+    75% {
+      box-shadow: 0 0 0 10px #0B6E4F60;
+    }
+  
+    100% {
+      box-shadow: 0 0 0 13px #0B6E4F30;
+      rotate: 0;
+    }
+  }
+
+#categorySelect {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding: 10px;
+    border: 1px solid var(--secondary-color);
+    background-color: var(--background-color);
+    color: var(--text-dark);
+    border-radius: 5px;
+    font-size: clamp(14px, 2vw, 16px);
+    width: 100%;
+}
+
+@media (prefers-color-scheme: dark) {
+    #categorySelect {
+        background-color: var(--background-dark);
+        color: var(--text-dark-mode);
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    input, textarea, select, button {
+        color: var(--text-dark-mode);
+    }
+}
+
+input, textarea, select, button {
+    font-size: 16px; /* Prevent zoom on input */
+}
