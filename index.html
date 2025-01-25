@@ -16,46 +16,31 @@
     <div class="main-container">
         <br>
         <h1>Smart Grocery List</h1>
-        <!-- Search Section -->
-         <!-- From Uiverse.io by satyamchaudharydev --> 
-<form class="form">
-    <label for="search">
-        <input id="searchBar" required="" autocomplete="off" placeholder="Search items..." type="text">
-        <div class="icon">
-            <svg stroke-width="2" stroke="currentColor" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="swap-on">
-                <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linejoin="round" stroke-linecap="round"></path>
-            </svg>
-            
-        </div>
-    </label>
-</form>
-    
-    
-        <!-- Input Section -->
+        <form class="form">
+            <label for="search">
+                <input id="searchBar" required="" autocomplete="off" placeholder="Search items..." type="text">
+                <div class="icon">
+                    <svg stroke-width="2" stroke="currentColor" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="swap-on">
+                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linejoin="round" stroke-linecap="round"></path>
+                    </svg>
+                </div>
+            </label>
+        </form>
         <div class="input-section">
             <input type="text" id="todoText" placeholder="Add a new item...">
             <input type="number" id="itemQuantity" placeholder="Qty" min="0" class="quantity-input">
             <input type="number" id="itemPrice" placeholder="Price" min="0" step="0.01" class="price-input">
             <button onclick="addGroceryItem(event)">Add</button>
         </div>
-    
-        <!-- Total Section -->
         <div class="total-section">
             <p>Items: <span id="totalItems">0</span></p>
             <p>Price: ₹<span id="totalPrice">0.00</span></p>
-           
         </div>
         <select id="categorySelect">
-          <!-- Options will be populated dynamically -->
-      </select>
-        <!-- Grocery Items List -->
+        </select>
         <div class="todos"></div>
     </div>
-
     <div class="popup" id="popup"></div>
-    
-
-  
     <div style="display: none;">
         <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAApgAAAKYB3X3/OAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANCSURBVEiJtZZPbBtFFMZ/M7ubXdtdb1xSFyeilBapySVU8h8OoFaooFSqiihIVIpQBKci6KEg9Q6H9kovIHoCIVQJJCKE1ENFjnAgcaSGC6rEnxBwA04Tx43t2FnvDAfjkNibxgHxnWb2e/u992bee7tCa00YFsffekFY+nUzFtjW0LrvjRXrCDIAaPLlW0nHL0SsZtVoaF98mLrx3pdhOqLtYPHChahZcYYO7KvPFxvRl5XPp1sN3adWiD1ZAqD6XYK1b/dvE5IWryTt2udLFedwc1+9kLp+vbbpoDh+6TklxBeAi9TL0taeWpdmZzQDry0AcO+jQ12RyohqqoYoo8RDwJrU+qXkjWtfi8Xxt58BdQuwQs9qC/afLwCw8tnQbqYAPsgxE1S6F3EAIXux2oQFKm0ihMsOF71dHYx+f3NND68ghCu1YIoePPQN1pGRABkJ6Bus96CutRZMydTl+TvuiRW1m3n0eDl0vRPcEysqdXn+jsQPsrHMquGeXEaY4Yk4wxWcY5V/9scqOMOVUFthatyTy8QyqwZ+kDURKoMWxNKr2EeqVKcTNOajqKoBgOE28U4tdQl5p5bwCw7BWquaZSzAPlwjlithJtp3pTImSqQRrb2Z8PHGigD4RZuNX6JYj6wj7O4TFLbCO/Mn/m8R+h6rYSUb3ekokRY6f/YukArN979jcW+V/S8g0eT/N3VN3kTqWbQ428m9/8k0P/1aIhF36PccEl6EhOcAUCrXKZXXWS3XKd2vc/TRBG9O5ELC17MmWubD2nKhUKZa26Ba2+D3P+4/MNCFwg59oWVeYhkzgN/JDR8deKBoD7Y+ljEjGZ0sosXVTvbc6RHirr2reNy1OXd6pJsQ+gqjk8VWFYmHrwBzW/n+uMPFiRwHB2I7ih8ciHFxIkd/3Omk5tCDV1t+2nNu5sxxpDFNx+huNhVT3/zMDz8usXC3ddaHBj1GHj/As08fwTS7Kt1HBTmyN29vdwAw+/wbwLVOJ3uAD1wi/dUH7Qei66PfyuRj4Ik9is+hglfbkbfR3cnZm7chlUWLdwmprtCohX4HUtlOcQjLYCu+fzGJH2QRKvP3UNz8bWk1qMxjGTOMThZ3kvgLI5AzFfo379UAAAAASUVORK5CYII=" id="editIcon" style="display: none;">
         <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAsQAAALEBxi1JjQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAKESURBVEiJrdVNiE5RGMDx/5mXz5FkFEKyUCgWs1BWFhILJR8bJQtlIR8L5WNBWSiUlIUVZSMLG0JZTJSFhUgWiCgfKQsLES/jY2Ysmrmux8Y7vTPjvTP3ree/Ofd/7nPOc55zb6aqVBVExFxgF7AWeB+biFgEXAE2Av2x+QjYXFUvI2JNRHQD54HjwFVgV0QsiYiNwG1gJvAC6AfeAYsi4hrQA9yLiO0R0Z3n3AEctxroAe4CXyNif2zTqjo/mF4DZOAo0FWJ/wDOAFP+5RtQB/YBG4D3wFAwGREbgOVFlXdATwQdwBbgRA7dl3MwHZgLXASml+5qfJ4DbAM+5/O2uf8VsCwitgFf8qPuqhZLhP05wQ85uAc8ApYCO3MHu9n6R2ZnrkRVvRgeAcuBOcB9/34ZR3MCncA6YDUwKXmm5ITadW4GpgI3gU/Juwr0AQ+Alaq6E7CxuTjJswc4C+wFrgAjI+I48BB4DMwD9kfEGuAoMAhMBo5GxHbgGlCPiJXAYGw9AaxsDmwEzgEzquoCMD8i5uXfRcBD4CqwpNSB0PB1LgS2AveBh025LhB0llKZWDkfXpKsDpyOiNuq+jwiRkXEjvx+TsVmckQcUtULEbELOEj6H94CbQNExIyIOFyCXa6q19uBioiTwCzgJHBaVd+262s1J26FquqjwvtAXVVrkfN7AHypqj/+B1RKYBrwOiKmAluAtyWbcRGxOiJqqvogIoYXrKcBW1X1c0RcBiZFxJgmw9HAD+AZ8CYiFrfqoC3AKGAEUAOeluyfAD3AE+ATcAi4BnwDHgFPgJeq+nsgQJ5YY4EpqvqqYKsBY1S1HhE1YLSq1iNiGDBCVesR0QGMVtV6qYNRwM+B+v4Cz0b3E2WiEXQAAAAASUVORK5CYII=" id="closeIcon" style="display: none;">

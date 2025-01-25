@@ -92,26 +92,23 @@ function addGroceryItem(e) {
     const itemText = document.getElementById('todoText');
     const itemQuantity = document.getElementById('itemQuantity');
     const itemPrice = document.getElementById('itemPrice');
-    const popup = document.getElementById('popup');
-    const audio = new Audio('./assets/audio/complete.mp3');
-
+  
     if (!itemText.value.trim()) {
         errorAudio.play();
         alert('Please enter an item name');
         return;
     }
-
+  
     const itemName = itemText.value.trim().toLowerCase();
     
     // Check if the item already exists
-   
     const itemExists = groceryItems.some(item => item.name.toLowerCase() === itemName);
     if (itemExists) {
         errorAudio.play();
         alert('This item is already in your grocery list.');
         return;
     }
-
+  
     const quantity = itemQuantity.value ? parseInt(itemQuantity.value) : 0;
     const price = itemPrice.value ? parseFloat(itemPrice.value) : 0;
     const category = findItemCategory(itemName);
@@ -124,9 +121,10 @@ function addGroceryItem(e) {
         type: category.type,
         quantity: quantity,
         price: price,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        showPopup: true // Add a flag to trigger popup across devices
     };
-
+  
     db.collection('groceryItems').add(item)
         .then((docRef) => {
             item.id = docRef.id;
@@ -141,19 +139,12 @@ function addGroceryItem(e) {
             generateGroceryItems();
             populateCategoryOptions(); // Refresh category options
             suggestionsList.style.display = 'none';
-
-            // Show popup with item emoji and name
-            popup.innerHTML = `${item.emoji} ${item.name}`;
-            popup.classList.add('show');
-            audio.play();
-            setTimeout(() => {
-                popup.classList.remove('show');
-            }, 2000);
         })
         .catch((error) => {
             console.error("Error adding grocery item: ", error);
         });
-}
+  }
+
 
 // Modified populateCategoryOptions function
 function populateCategoryOptions() {
@@ -187,12 +178,31 @@ function setupRealTimeUpdates() {
     db.collection('groceryItems')
         .onSnapshot((snapshot) => {
             snapshot.docChanges().forEach((change) => {
-                if (change.type === 'added' || 
-                    change.type === 'modified' || 
-                    change.type === 'removed') {
-                    // Reload grocery items when any change occurs
-                    loadGroceryItems();
+                if (change.type === 'added') {
+                    const newItem = change.doc.data();
+                    if (newItem.showPopup) {
+                        const popup = document.getElementById('popup');
+                        const audio = new Audio('./assets/audio/complete.mp3');
+                        
+                        // Show popup with item emoji and name
+                        popup.innerHTML = `${newItem.emoji} ${newItem.name}`;
+                        popup.classList.add('show');
+                        audio.play();
+                        
+                        setTimeout(() => {
+                            popup.classList.remove('show');
+                            // Remove the showPopup flag after showing
+                            db.collection('groceryItems').doc(change.doc.id).update({
+                                showPopup: firebase.firestore.FieldValue.delete()
+                            });
+                        }, 2000);
+                    }
+                    
+                    // Remove loadGroceryItems from here as it's already called in the document load event
                 }
+                if (change.type === 'modified' || change.type === 'removed') {
+                    loadGroceryItems();
+                     }
             });
         });
 }
