@@ -198,7 +198,7 @@ function setupRealTimeUpdates() {
                         }, 2000);
                     }
                     
-                    // Remove loadGroceryItems from here as it's already called in the document load event
+                    loadGroceryItems();
                 }
                 if (change.type === 'modified' || change.type === 'removed') {
                     loadGroceryItems();
