@@ -132,7 +132,6 @@ function addGroceryItem(e) {
     db.collection('groceryItems').add(item)
         .then((docRef) => {
             item.id = docRef.id;
-            groceryItems.unshift(item);
             return addSuggestion(itemName);
         })
         .then(() => {
@@ -207,12 +206,12 @@ function setupRealTimeUpdates() {
                         });
                     }
                 }
-               if (change.type === 'removed') {
+               else if (change.type === 'removed') {
                     const removedItem = change.doc.data();
                     message = `${removedItem.emoji} ${removedItem.name} removed`;
                     popupClass = 'delete-cancel';
                 }
-                else if (change.type === 'modified') {
+                else if (change.type === 'modified' && change.type !== 'added'){
                         message = 'Item updated';
                  } 
                 if (message) {
@@ -511,10 +510,7 @@ function cleanupOldItems() {
 
     // Execute all cleanup operations
     Promise.all(cleanupPromises)
-        .then(() => {
-            // Refresh the local items list
-            return loadGroceryItems();
-        })
+       
         .then(() => {
             // Reload suggestions after cleanup
             return loadSuggestions();
