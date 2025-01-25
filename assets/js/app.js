@@ -91,7 +91,9 @@ function addGroceryItem(e) {
     e.preventDefault();
     const itemText = document.getElementById('todoText');
     const itemQuantity = document.getElementById('itemQuantity');
+    const quantityUnit = document.getElementById('quantityUnit'); // Add this line
     const itemPrice = document.getElementById('itemPrice');
+    const searchBar = document.getElementById('searchBar'); // Add this line
   
     if (!itemText.value.trim()) {
         errorAudio.play();
@@ -110,6 +112,7 @@ function addGroceryItem(e) {
     }
   
     const quantity = itemQuantity.value ? parseInt(itemQuantity.value) : 0;
+    const unit = quantityUnit.value; // Add this line
     const price = itemPrice.value ? parseFloat(itemPrice.value) : 0;
     const category = findItemCategory(itemName);
     
@@ -120,6 +123,7 @@ function addGroceryItem(e) {
         emoji: category.emoji,
         type: category.type,
         quantity: quantity,
+        unit: unit, // Add this line
         price: price,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         showPopup: true // Add a flag to trigger popup across devices
@@ -134,7 +138,9 @@ function addGroceryItem(e) {
         .then(() => {
             itemText.value = '';
             itemQuantity.value = '';
+            quantityUnit.value = 'Kg'; // Reset the unit to default
             itemPrice.value = '';
+            searchBar.value = ''; // Clear the search bar
             updateTotals();
             generateGroceryItems();
             populateCategoryOptions(); // Refresh category options
@@ -175,34 +181,57 @@ function populateCategoryOptions() {
 }
 
 function setupRealTimeUpdates() {
+    let lastAddedItemId = null;
+    
     db.collection('groceryItems')
         .onSnapshot((snapshot) => {
             snapshot.docChanges().forEach((change) => {
+                const popupContainer = document.getElementById('popupContainer');
+                const audio = new Audio('./assets/audio/complete.mp3');
+                let message = '';
+                let popupClass = '';
+
                 if (change.type === 'added') {
                     const newItem = change.doc.data();
-                    if (newItem.showPopup) {
-                        const popup = document.getElementById('popup');
-                        const audio = new Audio('./assets/audio/complete.mp3');
+                    const newItemId = change.doc.id;
+                    
+                    // Prevent duplicate popups by checking last added item
+                    if (newItem.showPopup && newItemId !== lastAddedItemId) {
+                        lastAddedItemId = newItemId;
+                        message = `${newItem.emoji} ${newItem.name} added`;
+                        popupClass = 'complete';
                         
-                        // Show popup with item emoji and name
-                        popup.innerHTML = `${newItem.emoji} ${newItem.name}`;
-                        popup.classList.add('show');
+                        // Remove the showPopup flag
+                        db.collection('groceryItems').doc(newItemId).update({
+                            showPopup: firebase.firestore.FieldValue.delete()
+                        });
+                    }
+                }
+               if (change.type === 'removed') {
+                    const removedItem = change.doc.data();
+                    message = `${removedItem.emoji} ${removedItem.name} removed`;
+                    popupClass = 'delete-cancel';
+                }
+                else if (change.type === 'modified') {
+                        message = 'Item updated';
+                 } 
+                if (message) {
+                    const existingPopup = Array.from(popupContainer.children).find(popup => popup.textContent.includes(message));
+                    loadGroceryItems();
+                    if (!existingPopup) {
+                        const popup = document.createElement('div');
+                        popup.className = `popup ${popupClass} show`;
+                        popup.innerHTML = message;
+                        popupContainer.appendChild(popup);
                         audio.play();
                         
                         setTimeout(() => {
                             popup.classList.remove('show');
-                            // Remove the showPopup flag after showing
-                            db.collection('groceryItems').doc(change.doc.id).update({
-                                showPopup: firebase.firestore.FieldValue.delete()
-                            });
+                            popup.addEventListener('transitionend', () => popup.remove());
                         }, 2000);
                     }
-                    
-                    loadGroceryItems();
                 }
-                if (change.type === 'modified' || change.type === 'removed') {
-                    loadGroceryItems();
-                     }
+               
             });
         });
 }
@@ -244,6 +273,7 @@ function generateGroceryItems(filteredItems = null) {
                 groupedItems[category].items.forEach(item => {
                     const showQuantity = item.quantity && item.quantity > 0;
                     const showPrice = item.price && item.price > 0;
+                    const totalAmount = (item.price || 0) * (item.quantity || 1); // Calculate total amount
                     
                     let currentItem = `
                         <div class="todo" style="background-color: ${item.color}">
@@ -270,21 +300,21 @@ function generateGroceryItems(filteredItems = null) {
                                             value="${item.name}" 
                                             id="input${item.id}"
                                         >
-                                    </div>
-                                    ${showQuantity || showPrice ? `
-                                        <div class="item-details">
-                                            ${showQuantity ? `<span class="quantity-display">Qty: ${item.quantity}</span>` : ''}
-                                            ${showPrice ? `<span class="price-display">₹${item.price.toFixed(2)}</span>` : ''}
-                                        </div>
-                                    ` : ''}
-                                </div>
-                                <div class="editFormButtons">
-                                    <button type="button" class="editButton edit" onclick="editItem('${item.id}')">
+                                        <button type="button" class="editButton edit" onclick="editItem('${item.id}')">
                                         <img src="assets/icons/edit.png" alt="Edit" id='editIcon${item.id}'>
                                     </button>
                                     <button type="button" class="editButton delete-cancel" onclick="deleteGroceryItem('${item.id}')">
                                         <img src="assets/icons/bin.png" alt="Delete">
                                     </button>
+                                    </div>
+                                    
+                                    ${showQuantity || showPrice ? `
+                                        <div class="item-details">
+                                            ${showQuantity ? `<span class="quantity-display"><span>Qty:</span> <span>${item.quantity} ${item.unit}</span></span>` : ''}
+                                            ${showPrice ? `<span class="price-display"><span>Price:</span> <span>₹${item.price.toFixed(2)}</span></span>` : ''}
+                                            <span class="total-amount"><span>Total:</span> <span>₹${totalAmount.toFixed(2)}</span></span>
+                                        </div>
+                                    ` : ''}
                                 </div>
                             </form>
                         </div>`;
@@ -323,8 +353,14 @@ function editItem(itemId) {
             <div class='leftEditForm'>
                 <span class="emoji" style="display: none;">${item.emoji}</span>
                 <input type="text" value="${item.name}" class="editInput" id="editName${itemId}">
-                <input type="number" value="${currentQuantity}" min="1" class="quantity-input" id="editQuantity${itemId}">
-                <input type="number" value="${currentPrice}" min="0" step="0.01" class="price-input" id="editPrice${itemId}">
+                <div class="input-group">
+                    <label for="editQuantity${itemId}">Quantity:</label>
+                    <input type="number" value="${currentQuantity}" min="1" class="quantity-input" id="editQuantity${itemId}">
+                </div>
+                <div class="input-group">
+                    <label for="editPrice${itemId}">Price:</label>
+                    <input type="number" value="${currentPrice}" min="0" step="0.01" class="price-input" id="editPrice${itemId}">
+                </div>
             </div>
             <div class="editFormButtons">
                 <button type="button" class="editButton complete" onclick="saveEdit('${itemId}')">

@@ -67,22 +67,34 @@ h1 {
     border-bottom: 1px solid var(--secondary-color);
 }
 
-.popup {
+.popup-container {
     position: fixed;
-    top: -100px;
+    top: 20px;
     left: 50%;
     transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.popup {
     background-color: var(--popup-background);
     color: var(--popup-text-color);
     padding: 10px 20px;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    transition: top 0.5s ease-in-out;
-    z-index: 1000;
+    transition: top 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    opacity: 1;
 }
 
 .popup.show {
-    top: 20px;
+    opacity: 1;
+}
+
+.popup:not(.show) {
+    opacity: 0;
+    pointer-events: none;
 }
 
 .input-section {
@@ -165,6 +177,13 @@ button:hover {
     background-color: var(--primary-dark);
 }
 
+button:disabled,
+button.disabled {
+    background-color: gray;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .todos {
     display: flex;
     flex-direction: column;
@@ -172,12 +191,15 @@ button:hover {
 }
 
 .todo {
-    padding:5px 15px ;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 5px 5px 10px;
     border-radius: 8px;
     transition: transform 0.2s;
     background-color: var(--background-color);
     color: var(--text-dark);
-    box-shadow:-4px 8px 24px hsla(0, 0%, 0%, 0.25);
+    box-shadow: -4px 8px 24px hsla(0, 0%, 0%, 0.25);
 }
 
 .todo:hover {
@@ -210,8 +232,9 @@ button:hover {
 .editForm {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: start;
     gap: 10px;
+    width: 100%;
 }
 
 .leftEditForm {
@@ -219,12 +242,14 @@ button:hover {
     flex-direction: column;
     flex: 1;
     gap: 5px;
+    width: 100%;
 }
 
 .input-container {
     display: flex;
     align-items: center;
     gap: 10px;
+    width: 100%;
 }
 
 .emoji {
@@ -246,7 +271,7 @@ button:hover {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: var(--text-dark);
+    width: 100%;
 }
 
 .editInput:disabled {
@@ -256,6 +281,7 @@ button:hover {
 .editFormButtons {
     display: flex;
     gap: 5px;
+    justify-content: flex-end;
 }
 
 .editButton {
@@ -351,33 +377,25 @@ input[type="checkbox"] {
 
 .item-details {
     display: flex;
-    align-items: center;
-    gap: 10px;
-    padding-left: 34px; 
+    align-items: center; /* Add this line */
+    justify-content:space-evenly;
+    width: 100%; /* Add this line */
 }
 
 @media screen and (max-width: 768px) {
     .leftEditForm {
         flex-direction: column;
         align-items: flex-start;
-        width: 60%;
     }
-
     .input-container {
         width: 100%;
         margin-bottom: 5px;
     }
 
-    .item-details {
-        width: 100%;
-        padding-left: 34px;
-        margin-top: 5px;
-        justify-content: flex-start;
-    }
 
-    .quantity-display, .price-display {
+    .quantity-display, .price-display,.total-amount {
         background: rgba(255, 255, 255, 0.2);
-        padding: 4px 12px;
+        padding: 4px 5px;
         border-radius: 4px;
         font-size: 0.9em;
         color: #333;
@@ -387,14 +405,22 @@ input[type="checkbox"] {
         display: flex;
         gap: 5px;
     }
+    .editInput {
+        width: clamp(100px, 50%, 300px);
+     }
 }
 
-.quantity-display, .price-display {
+.quantity-display, .price-display ,.total-amount{
     color: #666;
     font-size: 0.9em;
     background: rgba(255, 255, 255, 0.2);
-    padding: 4px 12px;
+    padding: 4px 5px;
     border-radius: 4px;
+    text-align: center; /* Add this line */
+}
+
+.quantity-display span, .price-display span, .total-amount span {
+    display: block; /* Add this line */
 }
 
 .suggestions-container {
@@ -577,13 +603,20 @@ input[type="number"] {
         rotate: 0;
     }
 }
-
-#categorySelect {
+select{
     -webkit-appearance: none;
     -moz-appearance: none;
+    appearance: none;
+}
+
+#categorySelect {
     padding: 10px;
     border: 1px solid var(--secondary-color);
     background-color: var(--background-color);
+    background-image: url('data:image/svg+xml;utf8,<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
     color: var(--text-dark);
     border-radius: 5px;
     font-size: clamp(14px, 2vw, 16px);
@@ -595,14 +628,88 @@ input[type="number"] {
         background-color: var(--background-dark);
         color: var(--text-dark-mode);
     }
-}
-
-@media (prefers-color-scheme: dark) {
     input, textarea, select, button {
+        color: var(--text-dark-mode);
+    }
+    .input-details {
+        background-color: var(--background-dark);
+        color: var(--text-dark-mode);
+    }
+
+    .input-details summary {
+        color: var(--text-dark-mode);
+    }
+    .quantity-unit {
+        background-color: var(--background-dark);
         color: var(--text-dark-mode);
     }
 }
 
+
 input, textarea, select, button {
     font-size: 16px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    color: var(--text-light);
+    background-color: var(--gray-border);
+    border-radius: 5px;
+    padding-left: 5px;
+}
+
+.required:invalid {
+    border: 2px solid red;
+}
+
+.input-details {
+    margin-bottom: 20px;
+    border: 1px solid var(--secondary-color);
+    border-radius: 5px;
+    background-color: var(--background-color);
+    padding: 10px;
+}
+
+.input-details summary {
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    color: var(--text-dark);
+}
+
+.input-details[open] summary {
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--secondary-color);
+    margin-bottom: 5px;
+}
+
+
+
+.quantity-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex: 1;
+}
+
+.quantity-unit {
+    padding: 10px 0 10px 15px;
+    border: 1px solid var(--secondary-color);
+    background-color: var(--background-color);
+    border-radius: 5px;
+    font-size: 16px;
+    color: var(--text-dark);
+}
+
+@media (min-width: 600px) {
+    .quantity-wrapper {
+        flex: 1;
+    }
+
+    .quantity-unit {
+        flex: none;
+    }
 }
