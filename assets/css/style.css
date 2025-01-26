@@ -111,6 +111,9 @@ h1 {
     background-color: var(--background-color);
     color: var(--text-dark);
 }
+.input-section button {
+    background-color:var(--primary-dark);
+}
 
 @media (min-width: 600px) {
     .input-section input,
@@ -681,9 +684,9 @@ input, textarea, select, button {
 }
 
 .input-details[open] summary {
-    padding-bottom: 5px;
+    padding-bottom: 10px;
     border-bottom: 1px solid var(--secondary-color);
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
 
 .quantity-wrapper {
@@ -697,18 +700,23 @@ input, textarea, select, button {
 
 .quantity-unit, .quantity-input {
     flex: 1; /* Ensure they take equal space */
-    padding: 10px 15px; /* Adjust padding for better appearance */
+    padding: 10px 20px 10px 10px; /* Adjust padding for better appearance */
     border: 1px solid var(--secondary-color);
     background-color: var(--background-color);
     border-radius: 5px;
     font-size: 16px;
-    color: var(--text-dark);
-    background-image: url('data:image/svg+xml;utf8,<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>');
+    color: var(--secondary-dark);
     background-repeat: no-repeat;
     background-position: right 10px center;
     background-size: 16px; 
     height: clamp(40px, 5vw, 60px); /* Use clamp to ensure consistent height */
 }
+
+.quantity-unit{ 
+    background-image: url('data:image/svg+xml;utf8,<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>');
+    
+}
+
 
 @media (min-width: 600px) {
     .quantity-wrapper {

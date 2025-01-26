@@ -31,7 +31,9 @@
                 <input type="text" id="todoText" placeholder="Add a new item..." class="required">
                 <div class="quantity-wrapper">
                     <input type="number" id="itemQuantity" placeholder="Qty" min="0" class="quantity-input">
-                    <select id="quantityUnit" class="quantity-unit">
+                    <select id="quantityUnit" class="quantity-unit" >
+
+                    <option value=" " data-full="Unit" selected disabled >Unit</option>
                         <optgroup label="Solid">
                             <option value="Kg" data-full="Kilogram (Kg)">Kg</option>
                             <option value="g" data-full="Gram (g)">g</option>
@@ -42,8 +44,9 @@
                         </optgroup>
                         <optgroup label="Count">
                             <option value="Pk" data-full="Pack (Pk)">Pk</option>
-                            <option value="Pc" data-full="Piece (Pc)">Pc</option>
+                            <option value="Pc" data-full="Piece (Psc)">Psc</option>
                         </optgroup>
+                        <option value=" " data-full="Other(Oth)">Oth</option>
                     </select>
                 </div>
                 <input type="number" id="itemPrice" placeholder="Price" min="0" step="0.01" class="price-input">
@@ -81,6 +84,7 @@
 
         const addButton = document.getElementById('addButton');
         const todoText = document.getElementById('todoText');
+       
 
         todoText.addEventListener('input', () => {
             if (todoText.value.trim()) {
@@ -93,15 +97,46 @@
         });
 
         const quantityUnit = document.getElementById('quantityUnit');
+        const itemPrice = document.getElementById('itemPrice');
+        
+
         quantityUnit.addEventListener('focus', () => {
+            const unitOption = Array.from(quantityUnit.options).find(option => option.innerText === "Unit");
+            const otherOption = Array.from(quantityUnit.options).find(option => option.innerText === "Oth");
+            if (unitOption) {
+                unitOption.remove();
+                if (otherOption) {
+                    otherOption.selected = true;
+                }
+            }
             Array.from(quantityUnit.options).forEach(option => {
                 option.textContent = option.getAttribute('data-full');
             });
+            quantityUnit.value = 'Oth'; // Change unit to "Oth" when dropdown appears
         });
         quantityUnit.addEventListener('blur', () => {
             Array.from(quantityUnit.options).forEach(option => {
+                if (option.value === " ") {
+                    option.textContent = "Oth";
+                    return;
+                }
                 option.textContent = option.value;
             });
+            if (!quantityUnit.value) {
+                const unitOption = document.createElement('option');
+                unitOption.value = " ";
+                unitOption.innerText = "Unit";
+                unitOption.selected = true;
+                unitOption.disabled = true;
+                quantityUnit.appendChild(unitOption);
+            }
+        });
+        quantityUnit.addEventListener('change', () => {
+            if (quantityUnit.value === '' || quantityUnit.value === ' ') {
+                itemPrice.placeholder = 'Price';
+                return;
+            }
+            itemPrice.placeholder = `Price / ${quantityUnit.value}`;
         });
     </script>
 </body>

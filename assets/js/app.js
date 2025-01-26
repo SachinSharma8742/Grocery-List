@@ -137,7 +137,22 @@ function addGroceryItem(e) {
         .then(() => {
             itemText.value = '';
             itemQuantity.value = '';
-            quantityUnit.value = 'Kg'; // Reset the unit to default
+            quantityUnit.innerHTML = `
+                <option value=" " data-full="Unit" selected disabled style="color: gray;">Unit</option>
+                <optgroup label="Solid">
+                    <option value="Kg" data-full="Kilogram (Kg)">Kg</option>
+                    <option value="g" data-full="Gram (g)">g</option>
+                </optgroup>
+                <optgroup label="Liquid">
+                    <option value="L" data-full="Liter (L)">L</option>
+                    <option value="ml" data-full="Milliliter (ml)">ml</option>
+                </optgroup>
+                <optgroup label="Count">
+                    <option value="Pk" data-full="Pack (Pk)">Pk</option>
+                    <option value="Pc" data-full="Piece (Psc)">Psc</option>
+                </optgroup>
+                <option value=" " data-full="Other(Oth)">Oth</option>
+            `; // Reset the unit to default
             itemPrice.value = '';
             searchBar.value = ''; // Clear the search bar
             updateTotals();
@@ -211,7 +226,7 @@ function setupRealTimeUpdates() {
                     message = `${removedItem.emoji} ${removedItem.name} removed`;
                     popupClass = 'delete-cancel';
                 }
-                else if (change.type === 'modified' && change.type !== 'added'){
+                else if (change.type === 'modified'){
                         message = 'Item updated';
                  } 
                 if (message) {
@@ -311,7 +326,7 @@ function generateGroceryItems(filteredItems = null) {
                                         <div class="item-details">
                                             ${showQuantity ? `<span class="quantity-display"><span>Qty:</span> <span>${item.quantity} ${item.unit}</span></span>` : ''}
                                             ${showPrice ? `<span class="price-display"><span>Price:</span> <span>₹${item.price.toFixed(2)}</span></span>` : ''}
-                                            <span class="total-amount"><span>Total:</span> <span>₹${totalAmount.toFixed(2)}</span></span>
+                                            <span class="total-amount"><span>Total:</span> <span>₹${totalAmount.toFixed(0)}</span></span>
                                         </div>
                                     ` : ''}
                                 </div>
