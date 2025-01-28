@@ -9,7 +9,8 @@ const suggestionsList = document.createElement('ul');
 suggestionsList.className = 'suggestions-list';
 const searchSuggestionsList = document.createElement('ul');
 searchSuggestionsList.className = 'suggestions-list';
-
+const quantityUnit = document.getElementById('quantityUnit');
+const itemPrice = document.getElementById('itemPrice');
 const errorAudio = new Audio('./assets/audio/error.mp3');
 
 
@@ -154,7 +155,8 @@ function addGroceryItem(e) {
                 <option value=" " data-full="Other(Oth)">Oth</option>
             `; // Reset the unit to default
             itemPrice.value = '';
-            searchBar.value = ''; // Clear the search bar
+            searchBar.value = ''; 
+            itemPrice.placeholder = 'Price';// Clear the search bar
             updateTotals();
             generateGroceryItems();
             populateCategoryOptions(); // Refresh category options
