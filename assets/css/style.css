@@ -397,7 +397,7 @@ input[type="checkbox"] {
 
 
     .quantity-display, .price-display,.total-amount {
-        background: rgba(255, 255, 255);
+        background: rgba(255, 255, 255, 0.2);
         padding: 4px 5px;
         border-radius: 4px;
         font-size: 0.9em;
@@ -416,7 +416,7 @@ input[type="checkbox"] {
 .quantity-display, .price-display ,.total-amount{
     color: #666;
     font-size: 0.9em;
-    background: rgba(255, 255, 255);
+    background: rgba(255, 255, 255, 0.2);
     padding: 4px 5px;
     border-radius: 4px;
     text-align: center; /* Add this line */
@@ -684,9 +684,9 @@ input, textarea, select, button {
 }
 
 .input-details[open] summary {
-    padding-bottom: 10px;
+    padding-bottom: 5px;
     border-bottom: 1px solid var(--secondary-color);
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .quantity-wrapper {
@@ -705,7 +705,8 @@ input, textarea, select, button {
     background-color: var(--background-color);
     border-radius: 5px;
     font-size: 16px;
-    color: var(--secondary-dark);
+    color: var(--text-dark);
+   
     background-repeat: no-repeat;
     background-position: right 10px center;
     background-size: 16px; 
@@ -716,7 +717,6 @@ input, textarea, select, button {
     background-image: url('data:image/svg+xml;utf8,<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>');
     
 }
-
 
 @media (min-width: 600px) {
     .quantity-wrapper {
