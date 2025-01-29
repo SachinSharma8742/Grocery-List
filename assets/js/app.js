@@ -19,22 +19,70 @@ const errorAudio = new Audio('./assets/audio/error.mp3');
 const defaultCategory = { color: '#f0f0f0', emoji: '🛒', type: 'Other' };
 
 // Function to find the best matching category for an item
+// Function to find the best matching category for an item
 function findItemCategory(itemName) {
-    itemName = itemName.toLowerCase();
+    // Normalize input
+    itemName = itemName.toLowerCase().trim();
     
-    // First try exact match
-    if (itemCategories[itemName]) {
-        return itemCategories[itemName];
-    }
+    // Split into words and reverse to check from right to left
+    const words = itemName.split(/\s+/).reverse();
     
-    // Then try to find partial matches
-    for (let category in itemCategories) {
-        if (itemName.includes(category) || category.includes(itemName)) {
-            return itemCategories[category];
+    // Initialize result with default category
+    let result = {
+        color: defaultCategory.color,
+        emoji: defaultCategory.emoji,
+        type: defaultCategory.type
+    };
+    
+    // Flag to track if we found a primary category (from right-most match)
+    let foundPrimaryCategory = false;
+    
+    // Check each word from right to left
+    for (const word of words) {
+        // Check for exact category match
+        if (itemCategories[word]) {
+            if (!foundPrimaryCategory) {
+                // First match becomes primary category (determines type and default properties)
+                result = { ...itemCategories[word] };
+                foundPrimaryCategory = true;
+            } else {
+                // Subsequent matches can contribute color or emoji if they exist
+                if (itemCategories[word].color) {
+                    result.color = itemCategories[word].color;
+                }
+                // Only update emoji if we haven't found a primary category emoji
+                if (itemCategories[word].emoji && !result.emoji) {
+                    result.emoji = itemCategories[word].emoji;
+                }
+            }
+        }
+        
+        // Check for partial matches in category names
+        for (const category in itemCategories) {
+            if (word === category || category.includes(word) || word.includes(category)) {
+                if (!foundPrimaryCategory) {
+                    result = { ...itemCategories[category] };
+                    foundPrimaryCategory = true;
+                    break;
+                } else {
+                    // For secondary matches, prefer color from exact matches
+                    if (word === category && itemCategories[category].color) {
+                        result.color = itemCategories[category].color;
+                    }
+                    if (itemCategories[category].emoji && !result.emoji) {
+                        result.emoji = itemCategories[category].emoji;
+                    }
+                }
+            }
         }
     }
     
-    return defaultCategory;
+    // Try full item name if no primary category was found
+    if (!foundPrimaryCategory && itemCategories[itemName]) {
+        result = { ...itemCategories[itemName] };
+    }
+    
+    return result;
 }
 // Function to load suggestions from Firebase
 function loadSuggestions() {
@@ -137,7 +185,22 @@ function addGroceryItem(e) {
         .then(() => {
             itemText.value = '';
             itemQuantity.value = '';
-            quantityUnit.value = 'Kg'; // Reset the unit to default
+            quantityUnit.innerHTML = `
+                <option value=" " data-full="Unit" selected disabled style="color: gray;">Unit</option>
+                <optgroup label="Solid">
+                    <option value="Kg" data-full="Kilogram (Kg)">Kg</option>
+                    <option value="g" data-full="Gram (g)">g</option>
+                </optgroup>
+                <optgroup label="Liquid">
+                    <option value="L" data-full="Liter (L)">L</option>
+                    <option value="ml" data-full="Milliliter (ml)">ml</option>
+                </optgroup>
+                <optgroup label="Count">
+                    <option value="Pk" data-full="Pack (Pk)">Pk</option>
+                    <option value="Pc" data-full="Piece (Psc)">Psc</option>
+                </optgroup>
+                <option value=" " data-full="Other(Oth)">Oth</option>
+            `; // Reset the unit to default
             itemPrice.value = '';
             searchBar.value = ''; // Clear the search bar
             updateTotals();
@@ -211,7 +274,7 @@ function setupRealTimeUpdates() {
                     message = `${removedItem.emoji} ${removedItem.name} removed`;
                     popupClass = 'delete-cancel';
                 }
-                else if (change.type === 'modified' && change.type !== 'added'){
+                else if (change.type === 'modified'){
                         message = 'Item updated';
                  } 
                 if (message) {
@@ -311,7 +374,7 @@ function generateGroceryItems(filteredItems = null) {
                                         <div class="item-details">
                                             ${showQuantity ? `<span class="quantity-display"><span>Qty:</span> <span>${item.quantity} ${item.unit}</span></span>` : ''}
                                             ${showPrice ? `<span class="price-display"><span>Price:</span> <span>₹${item.price.toFixed(2)}</span></span>` : ''}
-                                            <span class="total-amount"><span>Total:</span> <span>₹${totalAmount.toFixed(2)}</span></span>
+                                            ${showPrice ? `<span class="total-amount"><span>Total:</span> <span>₹${totalAmount.toFixed(0)}</span></span>` : ''}
                                         </div>
                                     ` : ''}
                                 </div>
