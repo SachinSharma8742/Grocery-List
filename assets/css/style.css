@@ -86,6 +86,9 @@ h1 {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     transition: top 0.5s ease-in-out, opacity 0.5s ease-in-out;
     opacity: 1;
+    white-space: nowrap; /* Ensure single line display */
+    display: flex;
+    align-items: center; /* Center text vertically */
 }
 
 .popup.show {
@@ -381,8 +384,10 @@ input[type="checkbox"] {
 .item-details {
     display: flex;
     align-items: center; /* Add this line */
-    justify-content:space-evenly;
+    justify-content: space-between; /* Ensure specific space between spans */
     width: 100%; /* Add this line */
+    gap: 10px; /* Add gap between spans */
+    padding: 0 20px 0 20px;  /* Add padding to align spans */
 }
 
 @media screen and (max-width: 768px) {

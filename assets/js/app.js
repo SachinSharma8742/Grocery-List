@@ -283,7 +283,7 @@ function setupRealTimeUpdates() {
                     if (!existingPopup) {
                         const popup = document.createElement('div');
                         popup.className = `popup ${popupClass} show`;
-                        popup.innerHTML = message;
+                        popup.innerHTML = `<span>${message}</span>`;
                         popupContainer.appendChild(popup);
                         audio.play();
                         
@@ -329,7 +329,7 @@ function generateGroceryItems(filteredItems = null) {
             if (selectedCategory === 'all' || selectedCategory === category) {
                 itemsDiv.innerHTML += `
                     <div class="category-header">
-                        <h2>${category} <span class="category-total">Total: ₹${groupedItems[category].total.toFixed(2)}</span></h2>
+                        <h2>${category} <span class="category-total">Total: ₹${groupedItems[category].total.toFixed(0)}</span></h2>
                     </div>
                 `;
                 groupedItems[category].items.forEach(item => {
@@ -373,7 +373,7 @@ function generateGroceryItems(filteredItems = null) {
                                     ${showQuantity || showPrice ? `
                                         <div class="item-details">
                                             ${showQuantity ? `<span class="quantity-display"><span>Qty:</span> <span>${item.quantity} ${item.unit}</span></span>` : ''}
-                                            ${showPrice ? `<span class="price-display"><span>Price:</span> <span>₹${item.price.toFixed(2)}</span></span>` : ''}
+                                            ${showPrice ? `<span class="price-display"><span>Price:</span> <span>₹${item.price.toFixed(0)}</span></span>` : ''}
                                             ${showPrice ? `<span class="total-amount"><span>Total:</span> <span>₹${totalAmount.toFixed(0)}</span></span>` : ''}
                                         </div>
                                     ` : ''}
