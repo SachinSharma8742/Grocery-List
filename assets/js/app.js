@@ -99,14 +99,33 @@ function loadSuggestions() {
             console.error("Error loading suggestions: ", error);
         });
 }
+
+// Function to save the selected unit for each item in the database
+function saveSelectedUnit(itemName, unit) {
+    const normalizedName = itemName.toLowerCase();
+    return db.collection('itemSuggestions').doc(normalizedName).set({
+        name: normalizedName,
+        unit: unit,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+}
+
+// Function to get the saved unit for an item from the database
+function getSavedUnit(itemName) {
+    const normalizedName = itemName.toLowerCase();
+    return db.collection('itemSuggestions').doc(normalizedName).get()
+        .then(doc => doc.exists ? doc.data().unit : '');
+}
+
 // Function to add a new suggestion to Firebase
-function addSuggestion(itemName) {
+function addSuggestion(itemName, unit) {
     const normalizedName = itemName.toLowerCase();
     if (!itemSuggestions.has(normalizedName)) {
-        return db.collection('itemSuggestions').add({
+        return db.collection('itemSuggestions').doc(normalizedName).set({
             name: normalizedName,
+            unit: unit,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        })
+        }, { merge: true })
         .then(() => {
             itemSuggestions.add(normalizedName);
         })
@@ -180,7 +199,7 @@ function addGroceryItem(e) {
     db.collection('groceryItems').add(item)
         .then((docRef) => {
             item.id = docRef.id;
-            return addSuggestion(itemName);
+            return addSuggestion(itemName, unit);
         })
         .then(() => {
             itemText.value = '';
@@ -204,6 +223,7 @@ function addGroceryItem(e) {
             itemPrice.value = '';
             itemPrice.placeholder = 'Price'; // Reset the placeholder to "Price"
             searchBar.value = ''; // Clear the search bar
+            saveSelectedUnit(itemName, unit); // Save the selected unit
             updateTotals();
             generateGroceryItems();
             populateCategoryOptions(); // Refresh category options
@@ -676,6 +696,15 @@ function updateItemName(itemId, newName) {
     });
 }
 
+// Function to add a temporary skyblue border to an input element
+function highlightInput(inputElement) {
+    inputElement.style.border = '2px solid white';
+    setTimeout(() => {
+        inputElement.style.border = '';
+    }, 2000);
+}
+
+// Modified showSuggestions function
 function showSuggestions(inputElement, suggestionListElement, isSearch = false) {
     const inputValue = inputElement.value.toLowerCase().trim();
     if (!inputValue) {
@@ -722,6 +751,16 @@ function showSuggestions(inputElement, suggestionListElement, isSearch = false) 
                 const event = new Event('input');
                 inputElement.dispatchEvent(event);
             }
+
+            // Update the unit <select> with the saved unit
+            getSavedUnit(suggestion).then(savedUnit => {
+                if (savedUnit) {
+                    quantityUnit.value = savedUnit;
+                    highlightInput(quantityUnit); // Highlight the unit input
+                }
+            });
+
+            highlightInput(inputElement); // Highlight the input element
         });
 
         suggestionListElement.appendChild(li);
