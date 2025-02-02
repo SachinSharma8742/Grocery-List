@@ -202,6 +202,7 @@ function addGroceryItem(e) {
                 <option value=" " data-full="Other(Oth)">Oth</option>
             `; // Reset the unit to default
             itemPrice.value = '';
+            itemPrice.placeholder = 'Price'; // Reset the placeholder to "Price"
             searchBar.value = ''; // Clear the search bar
             updateTotals();
             generateGroceryItems();
