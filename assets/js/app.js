@@ -270,7 +270,7 @@ function setupRealTimeUpdates() {
         .onSnapshot((snapshot) => {
             snapshot.docChanges().forEach((change) => {
                 const popupContainer = document.getElementById('popupContainer');
-                const audio = new Audio('./assets/audio/complete.mp3');
+                let audio = new Audio('./assets/audio/complete.mp3');
                 let message = '';
                 let popupClass = '';
 
@@ -293,7 +293,9 @@ function setupRealTimeUpdates() {
                else if (change.type === 'removed') {
                     const removedItem = change.doc.data();
                     message = `${removedItem.emoji} ${removedItem.name} removed`;
+                    audio = new Audio('./assets/audio/delete.mp3');
                     popupClass = 'delete-cancel';
+
                 }
                 else if (change.type === 'modified'){
                         message = 'Item updated';
