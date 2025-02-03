@@ -100,30 +100,32 @@ function loadSuggestions() {
         });
 }
 
-// Function to save the selected unit for each item in the database
-function saveSelectedUnit(itemName, unit) {
+// Function to save the selected unit and price for each item in the database
+function saveSelectedUnitAndPrice(itemName, unit, price) {
     const normalizedName = itemName.toLowerCase();
     return db.collection('itemSuggestions').doc(normalizedName).set({
         name: normalizedName,
         unit: unit,
+        price: price,
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
     }, { merge: true });
 }
 
-// Function to get the saved unit for an item from the database
-function getSavedUnit(itemName) {
+// Function to get the saved unit and price for an item from the database
+function getSavedUnitAndPrice(itemName) {
     const normalizedName = itemName.toLowerCase();
     return db.collection('itemSuggestions').doc(normalizedName).get()
-        .then(doc => doc.exists ? doc.data().unit : '');
+        .then(doc => doc.exists ? { unit: doc.data().unit, price: doc.data().price } : { unit: '', price: 0 });
 }
 
 // Function to add a new suggestion to Firebase
-function addSuggestion(itemName, unit) {
+function addSuggestion(itemName, unit, price) {
     const normalizedName = itemName.toLowerCase();
     if (!itemSuggestions.has(normalizedName)) {
         return db.collection('itemSuggestions').doc(normalizedName).set({
             name: normalizedName,
             unit: unit,
+            price: price,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         }, { merge: true })
         .then(() => {
@@ -199,7 +201,7 @@ function addGroceryItem(e) {
     db.collection('groceryItems').add(item)
         .then((docRef) => {
             item.id = docRef.id;
-            return addSuggestion(itemName, unit);
+            return addSuggestion(itemName, unit, price);
         })
         .then(() => {
             itemText.value = '';
@@ -223,7 +225,7 @@ function addGroceryItem(e) {
             itemPrice.value = '';
             itemPrice.placeholder = 'Price'; // Reset the placeholder to "Price"
             searchBar.value = ''; // Clear the search bar
-            saveSelectedUnit(itemName, unit); // Save the selected unit
+            saveSelectedUnitAndPrice(itemName, unit, price); // Save the selected unit and price
             updateTotals();
             generateGroceryItems();
             populateCategoryOptions(); // Refresh category options
@@ -270,7 +272,7 @@ function setupRealTimeUpdates() {
         .onSnapshot((snapshot) => {
             snapshot.docChanges().forEach((change) => {
                 const popupContainer = document.getElementById('popupContainer');
-                let audio = new Audio('./assets/audio/complete.mp3');
+                const audio = new Audio('./assets/audio/complete.mp3');
                 let message = '';
                 let popupClass = '';
 
@@ -293,9 +295,7 @@ function setupRealTimeUpdates() {
                else if (change.type === 'removed') {
                     const removedItem = change.doc.data();
                     message = `${removedItem.emoji} ${removedItem.name} removed`;
-                    audio = new Audio('./assets/audio/delete.mp3');
                     popupClass = 'delete-cancel';
-
                 }
                 else if (change.type === 'modified'){
                         message = 'Item updated';
@@ -698,11 +698,11 @@ function updateItemName(itemId, newName) {
     });
 }
 
-// Function to add a temporary skyblue border to an input element
-function highlightInput(inputElement) {
-    inputElement.style.border = '2px solid white';
+// Function to add a temporary white border to an input element
+function addTemporaryBorder(element) {
+    element.style.outline = '2px solid white';
     setTimeout(() => {
-        inputElement.style.border = '';
+        element.style.outline = '';
     }, 2000);
 }
 
@@ -754,15 +754,17 @@ function showSuggestions(inputElement, suggestionListElement, isSearch = false) 
                 inputElement.dispatchEvent(event);
             }
 
-            // Update the unit <select> with the saved unit
-            getSavedUnit(suggestion).then(savedUnit => {
-                if (savedUnit) {
-                    quantityUnit.value = savedUnit;
-                    highlightInput(quantityUnit); // Highlight the unit input
+            // Update the unit and price <select> with the saved unit and price
+            getSavedUnitAndPrice(suggestion).then(savedData => {
+                if (savedData.unit) {
+                    quantityUnit.value = savedData.unit;
+                    addTemporaryBorder(quantityUnit); // Add temporary border
+                }
+                if (savedData.price) {
+                    itemPrice.value = savedData.price;
+                    addTemporaryBorder(itemPrice); // Add temporary border
                 }
             });
-
-            highlightInput(inputElement); // Highlight the input element
         });
 
         suggestionListElement.appendChild(li);
