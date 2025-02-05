@@ -32,9 +32,10 @@
             </label>
         </form>
         <details class="input-details" open>
+        
             <summary>Add New Item</summary>
             <div class="input-section">
-                <input type="text" id="todoText" placeholder="Add a new item..." class="required">
+                <input type="text" id="itemText" placeholder="Add a new item..." class="required">
                 <div class="quantity-wrapper">
                     <input type="number" id="itemQuantity" placeholder="Qty" min="0" class="quantity-input">
                     <select id="quantityUnit" class="quantity-unit" >
@@ -65,7 +66,7 @@
         </div>
         <select id="categorySelect">
         </select>
-        <div class="todos"></div>
+        <div class="items"></div>
     </div>
     <div class="popup" id="popup"></div>
     <div id="popupContainer" class="popup-container"></div>
@@ -89,12 +90,11 @@
         });
 
         const addButton = document.getElementById('addButton');
-        const todoText = document.getElementById('todoText');
         const searchBar = document.getElementById('searchBar');
         const clearSearch = document.getElementById('clearSearch');
 
-        todoText.addEventListener('input', () => {
-            if (todoText.value.trim()) {
+        itemText.addEventListener('input', () => {
+            if (itemText.value.trim()) {
                 addButton.disabled = false;
                 addButton.classList.remove('disabled');
             } else {
@@ -158,6 +158,16 @@
                 return;
             }
             itemPrice.placeholder = `Price / ${quantityUnit.value}`;
+        });
+
+        window.addEventListener('load', () => {
+            const mainContainer = document.querySelector('.main-container');
+            mainContainer.style.transition = 'max-height 0.5s ease-in-out';
+            mainContainer.style.maxHeight = '1000px'; // Set to a large value to ensure expansion
+        });
+
+        window.addEventListener('load', () => {
+            document.body.classList.add('loaded');
         });
     </script>
 </body>

@@ -2,14 +2,15 @@ let groceryItems = [];
 let itemSuggestions = new Set(); // For keeping unique items in memory
 
 // DOM Elements
-const itemText = document.getElementById('todoText');
-const itemsDiv = document.querySelector(".todos");
+const itemText = document.getElementById('itemText');
+const itemsDiv = document.querySelector(".items");
 const suggestionsList = document.createElement('ul');
 suggestionsList.className = 'suggestions-list';
 const searchSuggestionsList = document.createElement('ul');
 searchSuggestionsList.className = 'suggestions-list';
 
 const errorAudio = new Audio('./assets/audio/error.mp3');
+const Delete = new Audio('./assets/audio/delete.mp3');
 
 const defaultCategory = { color: '#f0f0f0', emoji: '🛒', type: 'Other' };
 
@@ -127,7 +128,7 @@ function loadGroceryItems() {
 
 function addGroceryItem(e) {
     e.preventDefault();
-    const itemText = document.getElementById('todoText');
+    const itemText = document.getElementById('itemText');
     const itemQuantity = document.getElementById('itemQuantity');
     const quantityUnit = document.getElementById('quantityUnit');
     const itemPrice = document.getElementById('itemPrice');
@@ -177,12 +178,13 @@ function addGroceryItem(e) {
         return db.collection('groceryItems').add(item);
     }).then((docRef) => {
         item.id = docRef.id;
+       
         return addSuggestion(itemName, item.unit, item.price);
     }).then(() => {
         itemText.value = '';
         itemQuantity.value = '';
         quantityUnit.innerHTML = `
-            <option value=" " data-full="Unit" selected disabled style="color: gray;">Unit</option>
+            <option value="" data-full="Unit" selected disabled style="color: gray;">Unit</option>
             <optgroup label="Solid">
                 <option value="Kg" data-full="Kilogram (Kg)">Kg</option>
                 <option value="g" data-full="Gram (g)">g</option>
@@ -195,7 +197,7 @@ function addGroceryItem(e) {
                 <option value="Pk" data-full="Pack (Pk)">Pk</option>
                 <option value="Pc" data-full="Piece (Psc)">Psc</option>
             </optgroup>
-            <option value=" " data-full="Other(Oth)">Oth</option>
+            <option value="" data-full="Other(Oth)">Oth</option>
         `;
         itemPrice.value = '';
         itemPrice.placeholder = 'Price';
@@ -248,6 +250,7 @@ function setupRealTimeUpdates() {
                         lastAddedItemId = newItemId;
                         message = `${newItem.emoji} ${newItem.name} added`;
                         popupClass = 'complete';
+                        audio.play();
                         db.collection('groceryItems').doc(newItemId).update({
                             showPopup: firebase.firestore.FieldValue.delete()
                         });
@@ -256,6 +259,7 @@ function setupRealTimeUpdates() {
                     const removedItem = change.doc.data();
                     message = `${removedItem.emoji} ${removedItem.name} removed`;
                     popupClass = 'delete-cancel';
+                    Delete.play();
                 } else if (change.type === 'modified') {
                     message = 'Item updated';
                 }
@@ -267,7 +271,6 @@ function setupRealTimeUpdates() {
                         popup.className = `popup ${popupClass} show`;
                         popup.innerHTML = `<span>${message}</span>`;
                         popupContainer.appendChild(popup);
-                        audio.play();
                         setTimeout(() => {
                             popup.classList.remove('show');
                             popup.addEventListener('transitionend', () => popup.remove());
@@ -309,7 +312,7 @@ function generateGroceryItems(filteredItems = null) {
                     const showPrice = item.price && item.price > 0;
                     const totalAmount = (item.price || 0) * (item.quantity || 1);
                     let currentItem = `
-                        <div class="todo" style="background-color: ${item.color}">
+                        <div class="item" style="background-color: ${item.color}">
                             <form id="form${item.id}" class="editForm">
                                 <div class='leftEditForm'>
                                     <div class="input-container">
@@ -371,7 +374,7 @@ function editItem(itemId) {
     const isEditing = !inputElement.disabled;
     if (!isEditing) {
         const form = document.getElementById(`form${itemId}`);
-        const currentQuantity = item.quantity || 1;
+        const currentQuantity = item.quantity || 0;
         const currentPrice = item.price || 0;
         const editForm = `
             <div class='leftEditForm'>
@@ -379,7 +382,7 @@ function editItem(itemId) {
                 <input type="text" value="${item.name}" class="editInput" id="editName${itemId}">
                 <div class="input-group">
                     <label for="editQuantity${itemId}">Quantity:</label>
-                    <input type="number" value="${currentQuantity}" min="1" class="quantity-input" id="editQuantity${itemId}">
+                    <input type="number" value="${currentQuantity}" min="0" class="quantity-input" id="editQuantity${itemId}">
                 </div>
                 <div class="input-group">
                     <label for="editPrice${itemId}">Price:</label>
@@ -405,7 +408,7 @@ function cancelEdit(itemId) {
 
 function saveEdit(itemId) {
     const newName = document.getElementById(`editName${itemId}`).value;
-    const newQuantity = parseInt(document.getElementById(`editQuantity${itemId}`).value) || 1;
+    const newQuantity = parseInt(document.getElementById(`editQuantity${itemId}`).value) || 0;
     const newPrice = parseFloat(document.getElementById(`editPrice${itemId}`).value) || 0;
     if (!newName.trim()) {
         errorAudio.play();
@@ -546,15 +549,19 @@ function checkHandler(itemId) {
 }
 
 function deleteGroceryItem(itemId) {
-    db.collection('groceryItems').doc(itemId).delete()
-        .then(() => {
-            groceryItems = groceryItems.filter(item => item.id !== itemId);
-            generateGroceryItems();
-            populateCategoryOptions();
-        })
-        .catch((error) => {
-            console.error("Error deleting item: ", error);
-        });
+    const itemElement = document.getElementById(`form${itemId}`).closest('.item');
+    itemElement.classList.add('deleting');
+    setTimeout(() => {
+        db.collection('groceryItems').doc(itemId).delete()
+            .then(() => {
+                groceryItems = groceryItems.filter(item => item.id !== itemId);
+                generateGroceryItems();
+                populateCategoryOptions();
+            })
+            .catch((error) => {
+                console.error("Error deleting item: ", error);
+            });
+    }, 300); // Match the duration of the CSS animation
 }
 
 function toggleEdit(itemId) {
@@ -677,7 +684,6 @@ function setupSearch() {
 document.addEventListener('DOMContentLoaded', () => {
     const inputContainer = document.createElement('div');
     inputContainer.className = 'suggestions-container';
-    const itemText = document.getElementById('todoText');
     itemText.parentNode.insertBefore(inputContainer, itemText);
     inputContainer.appendChild(itemText);
     inputContainer.appendChild(suggestionsList);
@@ -705,7 +711,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         } else {
             quantityUnit.innerHTML = `
-                <option value=" " data-full="Unit" selected disabled style="color: gray;">Unit</option>
+                <option value="" data-full="Unit" selected disabled style="color: gray;">Unit</option>
                 <optgroup label="Solid">
                     <option value="Kg" data-full="Kilogram (Kg)">Kg</option>
                     <option value="g" data-full="Gram (g)">g</option>
@@ -718,7 +724,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <option value="Pk" data-full="Pack (Pk)">Pk</option>
                     <option value="Pc" data-full="Piece (Psc)">Psc</option>
                 </optgroup>
-                <option value=" " data-full="Other(Oth)">Oth</option>
+                <option value="" data-full="Other(Oth)">Oth</option>
             `;
             itemPrice.value = '';
         }
