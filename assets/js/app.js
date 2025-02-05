@@ -630,19 +630,17 @@ function showSuggestions(inputElement, suggestionListElement, isSearch = false) 
     }
     suggestionListElement.innerHTML = '';
     matchingSuggestions.forEach(suggestion => {
-        const li = document.createElement('li');
         const category = itemCategories[suggestion.toLowerCase()] || defaultCategory;
+        const highlightedSuggestion = suggestion.replace(new RegExp(inputValue, 'gi'), match => `<mark>${match}</mark>`);
+        const li = document.createElement('li');
         li.innerHTML = `
             <span class="suggestion-emoji">${category.emoji}</span>
-            <span class="suggestion-text">${suggestion}</span>
+            <span class="suggestion-text">${highlightedSuggestion}</span>
             <span class="suggestion-category">${category.type}</span>
         `;
         li.addEventListener('click', () => {
             if (!isSearch) {
                 inputElement.value = suggestion;
-            }
-            suggestionListElement.style.display = 'none';
-            if (!isSearch) {
                 getSavedUnitAndPrice(suggestion).then(savedData => {
                     if (savedData.unit) {
                         quantityUnit.value = savedData.unit;
@@ -654,29 +652,15 @@ function showSuggestions(inputElement, suggestionListElement, isSearch = false) 
                     }
                 });
             }
+            suggestionListElement.style.display = 'none';
+            if (isSearch) {
+                const event = new Event('input');
+                inputElement.dispatchEvent(event);
+            }
         });
         suggestionListElement.appendChild(li);
     });
     suggestionListElement.style.display = 'block';
-}
-
-function setupSearch() {
-    const searchBar = document.getElementById('searchBar');
-    if (searchBar) {
-        const searchContainer = document.createElement('div');
-        searchContainer.className = 'suggestions-container';
-        searchBar.parentNode.insertBefore(searchContainer, searchBar);
-        searchContainer.appendChild(searchBar);
-        searchContainer.appendChild(searchSuggestionsList);
-        searchBar.addEventListener('input', () => {
-            showSuggestions(searchBar, searchSuggestionsList, true);
-            const searchText = searchBar.value.toLowerCase().trim();
-            const filteredItems = groceryItems.filter(item => 
-                item.name.toLowerCase().includes(searchText)
-            );
-            generateGroceryItems(filteredItems);
-        });
-    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -694,6 +678,7 @@ document.addEventListener('DOMContentLoaded', () => {
         searchContainer.appendChild(searchSuggestionsList);
     }
     itemText.addEventListener('input', () => {
+        searchSuggestionsList.style.display = 'none';
         showSuggestions(itemText, suggestionsList);
         const itemName = itemText.value.trim().toLowerCase();
         if (itemSuggestions.has(itemName)) {
@@ -729,6 +714,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     if (searchBar) {
         searchBar.addEventListener('input', () => {
+            suggestionsList.style.display = 'none';
             showSuggestions(searchBar, searchSuggestionsList, true);
             const searchText = searchBar.value.toLowerCase().trim();
             const filteredItems = groceryItems.filter(item => 
@@ -747,7 +733,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(cleanupOldItems, 3600000);
     Promise.all([loadGroceryItems(), loadSuggestions()])
     .then(() => {
-        setupSearch();
+       
         populateCategoryOptions();
         setupRealTimeUpdates();
         console.log('App initialized successfully');
