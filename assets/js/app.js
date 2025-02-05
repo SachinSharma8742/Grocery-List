@@ -642,20 +642,18 @@ function showSuggestions(inputElement, suggestionListElement, isSearch = false) 
                 inputElement.value = suggestion;
             }
             suggestionListElement.style.display = 'none';
-            if (isSearch) {
-                const event = new Event('input');
-                inputElement.dispatchEvent(event);
+            if (!isSearch) {
+                getSavedUnitAndPrice(suggestion).then(savedData => {
+                    if (savedData.unit) {
+                        quantityUnit.value = savedData.unit;
+                        addTemporaryBorder(quantityUnit);
+                    }
+                    if (savedData.price) {
+                        itemPrice.value = savedData.price;
+                        addTemporaryBorder(itemPrice);
+                    }
+                });
             }
-            getSavedUnitAndPrice(suggestion).then(savedData => {
-                if (savedData.unit) {
-                    quantityUnit.value = savedData.unit;
-                    addTemporaryBorder(quantityUnit);
-                }
-                if (savedData.price) {
-                    itemPrice.value = savedData.price;
-                    addTemporaryBorder(itemPrice);
-                }
-            });
         });
         suggestionListElement.appendChild(li);
     });
