@@ -322,29 +322,6 @@ input[type="checkbox"] {
     cursor: pointer;
 }
 
-.suggestions-container {
-    position: relative;
-}
-
-.suggestions-list {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: var(--background-color);
-    border: 1px solid #ddd;
-    border-top: none;
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 1000;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    display: none;
-    color: var(--text-dark);
-}
-
 .suggestion-item {
     display: flex;
     align-items: center;
@@ -451,8 +428,13 @@ input[type="checkbox"] {
     display: none;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     color: var(--text-dark);
+    padding: 0;
+    margin: 0;
+    list-style: none;
 }
-
+form .suggestions-list{
+    top: 170%;
+}
 .suggestions-list li {
     padding: 8px 12px;
     cursor: pointer;
@@ -534,6 +516,26 @@ input[type="number"] {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+#clearSearch {
+    position: absolute;
+    right: calc(5px + var(--padding));
+    top: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+  
+}
+
+#clearSearch svg {
+    height: 25px;
+    width: 25px;
+    color: red; /* Ensure SVG color is set */
 }
 
 .container input {

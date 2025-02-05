@@ -24,6 +24,11 @@
                         <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linejoin="round" stroke-linecap="round"></path>
                     </svg>
                 </div>
+                <button type="button" id="clearSearch" style="display: none;">
+                    <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
             </label>
         </form>
         <details class="input-details" open>
@@ -85,7 +90,8 @@
 
         const addButton = document.getElementById('addButton');
         const todoText = document.getElementById('todoText');
-       
+        const searchBar = document.getElementById('searchBar');
+        const clearSearch = document.getElementById('clearSearch');
 
         todoText.addEventListener('input', () => {
             if (todoText.value.trim()) {
@@ -95,6 +101,20 @@
                 addButton.disabled = true;
                 addButton.classList.add('disabled');
             }
+        });
+
+        searchBar.addEventListener('input', () => {
+            if (searchBar.value.trim()) {
+                clearSearch.style.display = 'inline';
+            } else {
+                clearSearch.style.display = 'none';
+            }
+        });
+
+        clearSearch.addEventListener('click', () => {
+            searchBar.value = '';
+            clearSearch.style.display = 'none';
+            searchBar.dispatchEvent(new Event('input'));
         });
 
         const quantityUnit = document.getElementById('quantityUnit');
