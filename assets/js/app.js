@@ -631,7 +631,7 @@ function showSuggestions(inputElement, suggestionListElement, isSearch = false) 
     suggestionListElement.innerHTML = '';
     matchingSuggestions.forEach(suggestion => {
         const category = itemCategories[suggestion.toLowerCase()] || defaultCategory;
-        const highlightedSuggestion = suggestion.replace(new RegExp(inputValue, 'gi'), match => `<mark>${match}</mark>`);
+        const highlightedSuggestion = suggestion.replace(new RegExp(inputValue, 'gi'), match => `<mark style="background-color: White; border-radius:2px; margin:0 1px 0 1px; padding:2px">${match}</mark>`);
         const li = document.createElement('li');
         li.innerHTML = `
             <span class="suggestion-emoji">${category.emoji}</span>
@@ -639,8 +639,8 @@ function showSuggestions(inputElement, suggestionListElement, isSearch = false) 
             <span class="suggestion-category">${category.type}</span>
         `;
         li.addEventListener('click', () => {
+            inputElement.value = suggestion; // Set the input value to the clicked suggestion
             if (!isSearch) {
-                inputElement.value = suggestion;
                 getSavedUnitAndPrice(suggestion).then(savedData => {
                     if (savedData.unit) {
                         quantityUnit.value = savedData.unit;
