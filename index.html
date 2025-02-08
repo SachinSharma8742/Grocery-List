@@ -75,6 +75,28 @@
         </div>
         <select id="categorySelect">
         </select>
+
+
+        <div class="CheckBoxs">
+            <input class="customCheckBoxInput" id="showChecked" checked type="checkbox" style="width: 100%;">
+            
+            <label class="customCheckBoxWrapper" for="showChecked" style="width: 100%;">
+                <div class="customCheckBox">
+                    <div class="inner">Checked<span id="checkedCount" class="count-badge notification">0</span></div>
+                    
+                </div>
+                
+            </label>
+        
+            <input class="customCheckBoxInput" id="showUnchecked" checked type="checkbox" style="width: 100%;">
+            <label class="customCheckBoxWrapper" for="showUnchecked" style="width: 100%;">
+                <div class="customCheckBox">
+                    <div class="inner">Unchecked<span id="uncheckedCount" class="count-badge notification">0</span></div>
+                </div>
+            </label>
+        </div>
+
+        
         <div class="items"></div>
     </div>
     <div class="popup" id="popup"></div>
@@ -91,9 +113,12 @@
         document.querySelectorAll('.required').forEach(input => {
             input.addEventListener('blur', () => {
                 if (!input.value.trim()) {
-                    input.style.border = '2px solid red';
+                    input.style.outline = '2px solid red';
+                    setTimeout(() => {
+                    input.style.outline = '';
+                    }, 2000);
                 } else {
-                    input.style.border = '';
+                    input.style.outline = '';
                 }
             });
         });

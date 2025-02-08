@@ -1,6 +1,9 @@
 let groceryItems = [];
 let itemSuggestions = new Set(); // For keeping unique items in memory
 
+let showChecked = true;
+let showUnchecked = true;
+
 // DOM Elements
 const itemText = document.getElementById('itemText');
 const itemsDiv = document.querySelector(".items");
@@ -283,7 +286,30 @@ function setupRealTimeUpdates() {
 
 function generateGroceryItems(filteredItems = null) {
     const selectedCategory = document.getElementById('categorySelect').value;
-    const items = filteredItems || groceryItems;
+    let items = filteredItems || groceryItems;
+    
+    // Update the count badges
+    const checkedCount = items.filter(item => item.status).length;
+    const uncheckedCount = items.filter(item => !item.status).length;
+    
+    const checkedCountElement = document.getElementById('checkedCount');
+    const uncheckedCountElement = document.getElementById('uncheckedCount');
+    
+    checkedCountElement.textContent = checkedCount;
+    uncheckedCountElement.textContent = uncheckedCount;
+    
+    // Hide count if zero
+    checkedCountElement.style.display = checkedCount === 0 ? 'none' : 'flex';
+    uncheckedCountElement.style.display = uncheckedCount === 0 ? 'none' : 'flex';
+
+    // Apply checked/unchecked filters
+    items = items.filter(item => {
+        if (item.status) {
+            return showChecked;
+        } else {
+            return showUnchecked;
+        }
+    });
     itemsDiv.innerHTML = '';
     items.sort((a, b) => b.timestamp - a.timestamp);
     const groupedItems = items.reduce((groups, item) => {
@@ -307,12 +333,15 @@ function generateGroceryItems(filteredItems = null) {
                         <h2>${category} <span class="category-total">Total: ₹${groupedItems[category].total.toFixed(0)}</span></h2>
                     </div>
                 `;
-                groupedItems[category].items.forEach(item => {
+                const uncheckedItems = groupedItems[category].items.filter(item => !item.status);
+                const checkedItems = groupedItems[category].items.filter(item => item.status);
+                const sortedItems = uncheckedItems.concat(checkedItems);
+                sortedItems.forEach(item => {
                     const showQuantity = item.quantity && item.quantity > 0;
                     const showPrice = item.price && item.price > 0;
                     const totalAmount = (item.price || 0) * (item.quantity || 1);
                     let currentItem = `
-                        <div class="item" style="background-color: ${item.color}">
+                        <div class="item" style="background-color: ${item.color}; ${item.status ? 'filter: brightness(0.5);' : ''}">
                             <form id="form${item.id}" class="editForm">
                                 <div class='leftEditForm'>
                                     <div class="input-container">
@@ -550,6 +579,8 @@ function checkHandler(itemId) {
 
 function deleteGroceryItem(itemId) {
     const itemElement = document.getElementById(`form${itemId}`).closest('.item');
+    itemElement.style.width = `${itemElement.offsetWidth}px`; 
+    itemElement.style.position = 'absolute'; 
     itemElement.classList.add('deleting');
     setTimeout(() => {
         db.collection('groceryItems').doc(itemId).delete()
@@ -665,6 +696,7 @@ function showSuggestions(inputElement, suggestionListElement, isSearch = false) 
 
 document.addEventListener('DOMContentLoaded', () => {
     const inputContainer = document.createElement('div');
+    
     inputContainer.className = 'suggestions-container';
     itemText.parentNode.insertBefore(inputContainer, itemText);
     inputContainer.appendChild(itemText);
@@ -743,6 +775,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     populateCategoryOptions();
     document.getElementById('categorySelect').addEventListener('change', () => {
+        generateGroceryItems();
+    });
+    const showCheckedCheckbox = document.getElementById('showChecked');
+    const showUncheckedCheckbox = document.getElementById('showUnchecked');
+
+    showCheckedCheckbox.addEventListener('change', (e) => {
+        showChecked = e.target.checked;
+        generateGroceryItems();
+    });
+
+    showUncheckedCheckbox.addEventListener('change', (e) => {
+        showUnchecked = e.target.checked;
         generateGroceryItems();
     });
 });

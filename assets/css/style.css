@@ -210,10 +210,11 @@ button.disabled {
     align-items: center;
     padding: 5px 5px 5px 10px;
     border-radius: 8px;
-    transition: transform 0.2s;
+    transition: all 0.2s ease-in-out;
     background-color: var(--background-color);
     color: var(--text-dark);
     box-shadow: -4px 8px 24px hsla(0, 0%, 0%, 0.25);
+    overflow: hidden;
 }
 
 .item:hover {
@@ -326,17 +327,17 @@ button.disabled {
     0% {
         opacity: 1;
         transform: translateY(0);
-        display: none;
+
     }
+
     100% {
         opacity: 0;
         transform: translateY(-100%);
-        
     }
 }
 
 .item.deleting {
-    animation: itemDelete 0.5s forwards;
+    animation: itemDelete .5s forwards;
 }
 
 input[type="checkbox"] {
@@ -377,7 +378,6 @@ input[type="checkbox"] {
     margin: 20px 0;
     padding: 10px;
     background: var(--primary-color);
-    border: 1px solid #c0e3ec;
     border-radius: 5px;
 }
 
@@ -558,7 +558,7 @@ input[type="number"] {
 #clearSearch svg {
     height: 25px;
     width: 25px;
-    color: red; /* Ensure SVG color is set */
+    color: var(--delete-cancel); /* Ensure SVG color is set */
 }
 
 .container input {
@@ -644,7 +644,7 @@ select{
 
 #categorySelect {
     padding: 10px;
-    border: 1px solid var(--secondary-color);
+    
     background-color: var(--background-color);
     background-image: url('data:image/svg+xml;utf8,<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>');
     background-repeat: no-repeat;
@@ -655,6 +655,7 @@ select{
     font-size: clamp(14px, 2vw, 16px);
     width: 100%;
 }
+
 
 @media (prefers-color-scheme: dark) {
     #categorySelect {
@@ -694,9 +695,6 @@ input, textarea, select, button {
     padding-left: 5px;
 }
 
-.required:invalid {
-    border: 2px solid red;
-}
 
 .input-details {
     margin-bottom: 20px;
@@ -756,4 +754,132 @@ input, textarea, select, button {
     .quantity-unit, .quantity-input {
         flex: none;
     }
+}
+
+
+
+
+.CheckBoxs{
+    margin-top: 20px;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 15px;
+    position: relative;
+    padding: 5px;
+    border-radius:5px;
+   
+  }
+  
+.customCheckBoxWrapper {
+    flex: 1;
+}
+
+.customCheckBox {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    user-select: none;
+    background-color: rgba(0, 0, 0, 0.16);
+    border-radius: 0px;
+    color: rgba(255, 255, 255, 0.7);
+    transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition-duration: 300ms;
+    transition-property: color, background-color, box-shadow;
+    display: flex;
+    height: 32px;
+    align-items: center;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px 1px 1px 0px;
+    outline: none;
+    justify-content: center;
+    
+  }
+  
+  .customCheckBox:hover {
+    background-color: #2c2c2c;
+    color: white;
+    box-shadow: rgba(0, 0, 0, 0.23) 0px -4px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px, rgba(0, 0, 0, 0.17) 0px 2px 4px 1px;
+   
+}
+  
+  .customCheckBox .inner {
+    display: inline-flex;
+    font-size: 18px;
+    font-weight: 900;
+    pointer-events: none;
+    transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition-duration: 300ms;
+    transition-property: transform;
+    transform: translateY(0px);
+  }
+  
+  .customCheckBox:hover .inner {
+    transform: translateY(-2px);
+  }
+  
+  .customCheckBoxWrapper:first-of-type .customCheckBox {
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+    border-right: 0px;
+    border-radius:20px20px 20px 20px;  
+  }
+  
+  .customCheckBoxWrapper:last-of-type .customCheckBox {
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+    border-left: 0px;
+    border-radius:20px 20px20px20px;
+    
+  }
+  
+  .customCheckBoxInput {
+    display: none;
+  }
+  
+  .customCheckBoxInput:checked + .customCheckBoxWrapper .customCheckBox {
+    background-color: #0B6E4F;
+    color: white;
+    box-shadow: rgba(0, 0, 0, 0.23) 0px -4px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px, rgba(0, 0, 0, 0.17) 0px 2px 4px 1px;
+    
+  }
+
+.customCheckBoxInput:checked:nth-of-type(1) + .customCheckBoxWrapper .customCheckBox {
+    background-color:var(--complete); /* Color for first button when clicked */
+    /* ...existing code... */
+}
+
+.customCheckBoxInput:checked:nth-of-type(2) + .customCheckBoxWrapper .customCheckBox {
+    background-color:var(--delete-cancel) /* Color for second button when clicked */
+    /* ...existing code... */
+}
+  
+  .customCheckBoxInput:checked + .customCheckBoxWrapper .customCheckBox .inner {
+    transform: translateY(-2px);
+  }
+  
+  .customCheckBoxInput:checked + .customCheckBoxWrapper .customCheckBox:hover {
+    background-color:var(--text-color);
+    box-shadow: rgba(0, 0, 0, 0.26) 0px -4px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px, rgba(0, 0, 0, 0.15) 0px 3px 6px 2px;
+    
+  }
+  
+  .customCheckBoxWrapper .customCheckBox:hover .inner {
+    transform: translateY(-2px);
+  }
+
+.notification {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  width: 20px;
+  padding: 10px;
+
+  font-size: 15px;
+  
+  border-radius: 50%;
+  margin-left: 5px;
+  background-color: #000000;
+  transition: 0.15s ease-in;
 }
