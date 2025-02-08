@@ -21,6 +21,7 @@
     --delete-cancel: rgb(255, 0, 0);
     --complete: rgb(0, 255, 0);
     --edit: rgb(37, 127, 218);
+
 }
 
 @media (prefers-color-scheme: dark) {
@@ -838,7 +839,6 @@ input, textarea, select, button {
   }
   
   .customCheckBoxInput:checked + .customCheckBoxWrapper .customCheckBox {
-    background-color: #0B6E4F;
     color: white;
     box-shadow: rgba(0, 0, 0, 0.23) 0px -4px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px, rgba(0, 0, 0, 0.17) 0px 2px 4px 1px;
     
@@ -846,11 +846,13 @@ input, textarea, select, button {
 
 .customCheckBoxInput:checked:nth-of-type(1) + .customCheckBoxWrapper .customCheckBox {
     background-color:var(--complete); /* Color for first button when clicked */
+    outline: 2px solid var(--edit);
     /* ...existing code... */
 }
 
 .customCheckBoxInput:checked:nth-of-type(2) + .customCheckBoxWrapper .customCheckBox {
-    background-color:var(--delete-cancel) /* Color for second button when clicked */
+    background-color:var(--delete-cancel);/* Color for second button when clicked */
+    outline: 2px solid var(--edit);
     /* ...existing code... */
 }
   
@@ -859,9 +861,7 @@ input, textarea, select, button {
   }
   
   .customCheckBoxInput:checked + .customCheckBoxWrapper .customCheckBox:hover {
-    background-color:var(--text-color);
     box-shadow: rgba(0, 0, 0, 0.26) 0px -4px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px, rgba(0, 0, 0, 0.15) 0px 3px 6px 2px;
-    
   }
   
   .customCheckBoxWrapper .customCheckBox:hover .inner {
