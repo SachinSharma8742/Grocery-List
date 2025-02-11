@@ -200,6 +200,13 @@ function addGroceryItem(e) {
                 <option value="Pk" data-full="Pack (Pk)">Pk</option>
                 <option value="Pc" data-full="Piece (Psc)">Psc</option>
             </optgroup>
+            <optgroup label="Length">
+                <option value="m" data-full="Meter (m)">m</option>
+                <option value="cm" data-full="Centimeter (cm)">cm</option>
+                <option value="mm" data-full="Millimeter (mm)">mm</option>
+                <option value="ft" data-full="Feet (ft)">ft</option>
+                <option value="in" data-full="Inch (in)">in</option>
+            </optgroup>
             <option value="" data-full="Other(Oth)">Oth</option>
         `;
         itemPrice.value = '';
@@ -738,6 +745,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 <optgroup label="Count">
                     <option value="Pk" data-full="Pack (Pk)">Pk</option>
                     <option value="Pc" data-full="Piece (Psc)">Psc</option>
+                </optgroup>
+                <optgroup label="Length">
+                    <option value="m" data-full="Meter (m)">m</option>
+                    <option value="cm" data-full="Centimeter (cm)">cm</option>
+                    <option value="mm" data-full="Millimeter (mm)">mm</option>
+                    <option value="ft" data-full="Feet (ft)">ft</option>
+                    <option value="in" data-full="Inch (in)">in</option>
                 </optgroup>
                 <option value="" data-full="Other(Oth)">Oth</option>
             `;
