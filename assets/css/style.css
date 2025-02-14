@@ -777,10 +777,19 @@ input, textarea, select, button {
 }
 
 .customCheckBox {
+    min-height: 30px;
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; /* Align items to the start */
+
+    display: grid; 
+    grid-auto-flow: column; 
+    grid-template-columns: .3fr 5fr .3fr; 
+    grid-template-rows: 1fr; 
+    gap: 0px 0px; 
+    grid-template-areas: 
+      "light inner count-badge"; 
+    justify-items: center; 
+    align-items: center; 
+
     padding: 5px; /* Add padding for space around */
     background-color: rgba(0, 0, 0, 0.16);
     color: rgba(255, 255, 255, 0.7);
@@ -793,7 +802,7 @@ input, textarea, select, button {
 }
 
 .customCheckBox .light {
-    margin:0 10px 0 5px; /* Add margin to separate from text */
+    margin:auto; /* Add margin to separate from text */
     width: 12px; /* Increase size */
     height: 12px; /* Increase size */
     border-radius: 50%;
@@ -804,6 +813,7 @@ input, textarea, select, button {
         0 0 3px 1px rgba(165, 15, 15, 0.9),
         inset 0 1px 1px 1px rgba(0, 0, 0, 0.5),
         0 1px 0 0 rgba(255, 255, 255, 0.1);
+    
 }
 
 
@@ -819,7 +829,7 @@ input, textarea, select, button {
     transform: translateY(0px);
   }
   
-  .customCheckBox:hover .inner {
+  .customCheckBox:hover {
     transform: translateY(-2px);
   }
   
@@ -842,9 +852,7 @@ input, textarea, select, button {
   }
   
   .customCheckBoxInput:checked + .customCheckBoxWrapper .customCheckBox {
-    color: white;
-    box-shadow: rgba(0, 0, 0, 0.23) 0px -4px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px, rgba(0, 0, 0, 0.17) 0px 2px 4px 1px;
-    
+    color: white;    
   }
 
 .customCheckBoxInput:checked:nth-of-type(1) + .customCheckBoxWrapper .customCheckBox {
@@ -857,15 +865,13 @@ input, textarea, select, button {
     outline: 2px solid var(--edit);
 }
 
-.customCheckBoxInput:checked + .customCheckBoxWrapper .customCheckBox .inner {
+.customCheckBoxInput:checked + .customCheckBoxWrapper .customCheckBox {
     transform: translateY(-2px);
   }
   
-  .customCheckBoxInput:checked + .customCheckBoxWrapper .customCheckBox:hover {
-    box-shadow: rgba(0, 0, 0, 0.26) 0px -4px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px, rgba(0, 0, 0, 0.15) 0px 3px 6px 2px;
-  }
+
   
-  .customCheckBoxWrapper .customCheckBox:hover .inner {
+  .customCheckBoxWrapper .customCheckBox:hover {
     transform: translateY(-2px);
   }
   .customCheckBoxInput:checked + .customCheckBoxWrapper .customCheckBox .light {
@@ -895,7 +901,6 @@ input, textarea, select, button {
         inset 0 1px 1px 1px rgba(0, 0, 0, 0.5),
         0 1px 0 0 rgba(255, 255, 255, 0.1);
 }
-
 
 .notification {
   display: flex;
