@@ -805,7 +805,7 @@ input, textarea, select, button {
 }
 
 .customCheckBox .light {
-    margin:auto; /* Add margin to separate from text */
+    margin-left:2px; /* Add margin to separate from text */
     width: 12px; /* Increase size */
     height: 12px; /* Increase size */
     border-radius: 50%;
@@ -826,6 +826,7 @@ input, textarea, select, button {
     font-size: 18px;
     font-weight: 900;
     pointer-events: none;
+    transition: all 0.3s ease-in-out;
     transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
     transition-duration: 300ms;
     transition-property: transform;
@@ -905,18 +906,28 @@ input, textarea, select, button {
         0 1px 0 0 rgba(255, 255, 255, 0.1);
 }
 
+@media screen and (max-width: 768px) {
+    .customCheckBox .inner {
+        font-size: 14px; /* Decrease font size for mobile */
+    }
+    .customCheckBox .notification {
+        font-size: 12px; /* Decrease font size for mobile */
+    }
+    .customCheckBox .light{
+        width: 8px; /* Decrease size for mobile */
+        height: 8px; /* Decrease size for mobile */
+    }
+}
+
 .notification {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 20px;
   width: 20px;
-  padding: 10px;
-
   font-size: 15px;
-  
+  color: var(--text-dark);
   border-radius: 50%;
-  margin-left: 5px;
-  background-color: #000000;
+  background-color: var(--text-light);
   transition: 0.15s ease-in;
 }

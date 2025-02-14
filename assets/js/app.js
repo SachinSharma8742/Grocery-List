@@ -306,8 +306,8 @@ function generateGroceryItems(filteredItems = null) {
     uncheckedCountElement.textContent = uncheckedCount;
     
     // Hide count if zero
-    checkedCountElement.style.display = checkedCount === 0 ? 'none' : 'flex';
-    uncheckedCountElement.style.display = uncheckedCount === 0 ? 'none' : 'flex';
+    checkedCountElement.style.opacity = checkedCount === 0 ? '0' : '1';
+    uncheckedCountElement.style.opacity = uncheckedCount === 0 ? '0' : '1';
 
     // Apply checked/unchecked filters
     items = items.filter(item => {
